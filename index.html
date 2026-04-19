@@ -1,101 +1,677 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Zeus Brokers Miami</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leslie Car | Car sales through WhatsApp</title>
+  <meta name="description" content="We help you find the right car in Miami. Fast WhatsApp support, options based on your budget, and guidance throughout the process." />
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #171a21;
+      --soft: #222733;
+      --text: #f5f7fb;
+      --muted: #b8c0d1;
+      --accent: #25d366;
+      --accent-2: #d7b36a;
+      --line: rgba(255,255,255,.08);
+      --shadow: 0 20px 50px rgba(0,0,0,.25);
+      --radius: 22px;
+      --max: 1120px;
+    }
 
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  padding: 40px;
-  background: #f5f5f5;
-}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(37,211,102,.13), transparent 28%),
+        radial-gradient(circle at top left, rgba(215,179,106,.08), transparent 18%),
+        var(--bg);
+      color: var(--text);
+    }
 
-h1 {
-  font-size: 28px;
-}
+    a { color: inherit; text-decoration: none; }
 
-/* Botón */
-.whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #25D366;
-  color: white;
-  border-radius: 50px;
-  padding: 14px 20px;
-  font-size: 16px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  animation: pulse 2s infinite;
-}
+    .wrap {
+      width: min(100% - 32px, var(--max));
+      margin: 0 auto;
+    }
 
-.whatsapp-btn img {
-  width: 22px;
-}
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(15,17,21,.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
 
-@keyframes pulse {
-  50% { transform: scale(1.08); }
-}
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
 
-/* Chat */
-.chat-box {
-  position: fixed;
-  bottom: 85px;
-  right: 20px;
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  font-size: 14px;
-  max-width: 260px;
-  display: none;
-  text-align: left;
-}
-</style>
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #7effad);
+      color: #07250f;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+    }
+
+    .nav {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .btn,
+    button {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-weight: 800;
+      transition: .2s transform ease, .2s opacity ease, .2s background ease;
+    }
+
+    .btn:hover,
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #08120c;
+    }
+
+    .btn-primary:hover { background: #31e376; }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .hero {
+      padding: 74px 0 36px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+      font-size: 14px;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: .98;
+      letter-spacing: -1.5px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 680px;
+      margin: 0 0 26px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .mini-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .mini-points span {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .lead-card { padding: 22px; }
+    .lead-card h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .lead-card p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    form { display: grid; gap: 12px; }
+    .field { display: grid; gap: 8px; }
+
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+    }
+
+    input::placeholder,
+    textarea::placeholder { color: #9099ad; }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .stats { padding: 14px 0 34px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .stat { padding: 22px; }
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .section { padding: 34px 0; }
+    .section h3 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 4vw, 42px);
+      letter-spacing: -1px;
+    }
+
+    .section-copy {
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .features,
+    .cars,
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feature,
+    .car-card,
+    .faq-item {
+      padding: 22px;
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: rgba(37,211,102,.12);
+      margin-bottom: 14px;
+      border: 1px solid rgba(37,211,102,.2);
+    }
+
+    .feature h4,
+    .car-card h4,
+    .faq-item h4 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .feature p,
+    .car-card p,
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .car-tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      background: rgba(215,179,106,.12);
+      color: #f3deb1;
+      border: 1px solid rgba(215,179,106,.2);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cta {
+      padding: 34px 0 70px;
+    }
+
+    .cta-box {
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .cta-box h4 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .cta-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .success {
+      display: none;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(37,211,102,.12);
+      color: #bdf4d2;
+      border: 1px solid rgba(37,211,102,.2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .features,
+      .cars,
+      .faq-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row { grid-template-columns: 1fr; }
+      .nav { display: none; }
+    }
+  </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a href="#home" class="brand">
+        <div class="brand-badge">L</div>
+        <div>Leslie Car</div>
+      </a>
 
-<h1>🚗 Cars in Miami • Carros en Miami</h1>
+      <nav class="nav">
+        <a href="#how-it-works">How it works</a>
+        <a href="#inventory">Options</a>
+        <a href="#faq">FAQ</a>
+      </nav>
 
-<p>
-✅ Fast approval / Aprobación rápida<br>
-✅ Any credit / Cualquier crédito<br>
-✅ Financing available / Financiamiento disponible
-</p>
+      <a class="btn btn-primary" id="topWhatsapp" href="https://wa.me/17862459777?text=Hello%2C%20I%20want%20information%20about%20cars." target="_blank" rel="noopener">Chat on WhatsApp</a>
+    </div>
+  </header>
 
-<div class="chat-box" id="chatBox">
-<strong>Sales Agent</strong><br><br>
+  <main>
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">🚗 Fast support for car sales in Miami</div>
+          <h1>We help you find the right car without wasting time.</h1>
+          <p>
+            Tell us what you are looking for, how much you want to pay, and where you are located. We guide you quickly through WhatsApp with options based on your situation and help you through the process.
+          </p>
 
-👋 Hi! / Hola!<br><br>
+          <div class="hero-actions">
+            <a class="btn btn-primary" id="heroWhatsapp" href="https://wa.me/17862459777?text=Hello%2C%20I%20need%20help%20buying%20a%20car." target="_blank" rel="noopener">Talk now</a>
+            <a class="btn btn-secondary" href="#leadForm">I want to be contacted</a>
+          </div>
 
-What are you looking for?<br>
-¿Qué buscas?<br><br>
+          <div class="mini-points">
+            <span>Fast response</span>
+            <span>Personal guidance</span>
+            <span>Purchase or financing</span>
+            <span>English and Spanish support</span>
+          </div>
+        </div>
 
-• 🚗 New car / Nuevo<br>
-• 🔁 Used car / Usado<br>
-• 💳 Financing / Financiamiento<br><br>
+        <div class="card lead-card">
+          <h2>Tell us about your case</h2>
+          <p>Fill out these details and we will open WhatsApp with your information ready.</p>
 
-👉 We can help you today / Te ayudamos hoy
-</div>
+          <form id="leadForm">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" placeholder="Your name" required />
+            </div>
 
-<a class="whatsapp-btn"
-href="https://wa.me/17862459777?text=Hi,%20I%20want%20information%20about%20cars%20in%20Miami.%20/%20Hola,%20quiero%20información%20sobre%20carros%20en%20Miami.%20Me%20interesa:%20"
-target="_blank">
-<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
-Chat Now
-</a>
+            <div class="form-row">
+              <div class="field">
+                <label for="phone">Phone</label>
+                <input id="phone" name="phone" type="tel" placeholder="Your phone number" />
+              </div>
+              <div class="field">
+                <label for="area">Area</label>
+                <input id="area" name="area" type="text" placeholder="Ex. Miami, Hialeah, Doral" />
+              </div>
+            </div>
 
-<script>
-setTimeout(() => {
-  document.getElementById("chatBox").style.display = "block";
-}, 2000);
-</script>
+            <div class="form-row">
+              <div class="field">
+                <label for="model">Car you want</label>
+                <select id="model" name="model">
+                  <option value="">Select an option</option>
+                  <option>Toyota Corolla</option>
+                  <option>Toyota Camry</option>
+                  <option>Toyota RAV4</option>
+                  <option>Toyota Highlander</option>
+                  <option>Lexus</option>
+                  <option>Pickup</option>
+                  <option>SUV</option>
+                  <option>Other model</option>
+                </select>
+              </div>
 
+              <div class="field">
+                <label for="budget">Monthly budget</label>
+                <select id="budget" name="budget">
+                  <option value="">Select an option</option>
+                  <option>Under $400</option>
+                  <option>$400 - $550</option>
+                  <option>$550 - $700</option>
+                  <option>$700 - $900</option>
+                  <option>Over $900</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="dealType">Type of deal</label>
+                <select id="dealType" name="dealType">
+                  <option value="">Select an option</option>
+                  <option>Purchase</option>
+                  <option>Leasing</option>
+                  <option>Financing</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="credit">Credit situation</label>
+                <select id="credit" name="credit">
+                  <option value="">Select an option</option>
+                  <option>Good</option>
+                  <option>Average</option>
+                  <option>Low</option>
+                  <option>ITIN</option>
+                  <option>I prefer to explain on WhatsApp</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="details">Tell us more</label>
+              <textarea id="details" name="details" placeholder="Ex. I need a family car, I work for Uber, I want to trade in my current car, etc."></textarea>
+            </div>
+
+            <button class="btn-primary" type="submit">Open WhatsApp with my details</button>
+            <div class="success" id="successBox">Done. WhatsApp will open with your information ready.</div>
+            <div class="note">Change the WhatsApp number in the code to your real number before publishing.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="wrap stats-grid">
+        <div class="card stat">
+          <strong>1</strong>
+          <span>You contact us through WhatsApp and we review your case quickly.</span>
+        </div>
+        <div class="card stat">
+          <strong>2</strong>
+          <span>We guide you based on model, budget, and type of purchase.</span>
+        </div>
+        <div class="card stat">
+          <strong>3</strong>
+          <span>If your case fits, we move to the next step with you.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+      <div class="wrap">
+        <h3>How it works</h3>
+        <p class="section-copy">
+          This page is designed to capture car leads in a simple way: WhatsApp button, short form, and a ready message so the seller receives a cleaner lead from the beginning.
+        </p>
+
+        <div class="features">
+          <div class="card feature">
+            <div class="feature-icon">📲</div>
+            <h4>Fast entry</h4>
+            <p>The customer comes in, fills key details, and opens WhatsApp without complicated steps.</p>
+          </div>
+
+          <div class="card feature">
+            <div class="feature-icon">🎯</div>
+            <h4>Clearer lead</h4>
+            <p>You receive model, budget, area, type of deal, and general situation.</p>
+          </div>
+
+          <div class="card feature">
+            <div class="feature-icon">🤝</div>
+            <h4>Human follow-up</h4>
+            <p>Perfect to connect later with ManyChat, a CRM, or manual follow-up.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="inventory">
+      <div class="wrap">
+        <h3>Examples of categories you can sell</h3>
+        <p class="section-copy">
+          You can place real models, brands, or buyer profiles here. For now, I left examples focused on car sales in Miami.
+        </p>
+
+        <div class="cars">
+          <div class="card car-card">
+            <div class="car-tag">Families</div>
+            <h4>SUVs and family cars</h4>
+            <p>Comfortable options for space, safety, and daily use.</p>
+          </div>
+
+          <div class="card car-card">
+            <div class="car-tag">Work</div>
+            <h4>Cars for Uber or heavy use</h4>
+            <p>Cases focused on economy, performance, and monthly payment.</p>
+          </div>
+
+          <div class="card car-card">
+            <div class="car-tag">Credit</div>
+            <h4>Special cases or ITIN</h4>
+            <p>Customers who need guidance before deciding the next step.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap">
+        <h3>Frequently asked questions</h3>
+        <div class="faq-grid">
+          <div class="card faq-item">
+            <h4>Can I use this only with WhatsApp?</h4>
+            <p>Yes. The page already opens the conversation with a ready message.</p>
+          </div>
+
+          <div class="card faq-item">
+            <h4>Can this connect to ManyChat?</h4>
+            <p>Yes. Later you can use this same landing page as traffic entry and connect follow-up through WhatsApp.</p>
+          </div>
+
+          <div class="card faq-item">
+            <h4>Can I change the texts and models?</h4>
+            <p>Yes. Everything is in one file so you can edit it quickly from GitHub.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="card cta-box">
+          <div>
+            <h4>Want this to look more premium?</h4>
+            <p>You can turn this page into a real auto broker landing page with your brand, your models, your photos, and direct connection to WhatsApp or forms.</p>
+          </div>
+          <a class="btn btn-primary" id="bottomWhatsapp" href="https://wa.me/17862459777?text=Hello%2C%20I%20want%20more%20information%20about%20cars." target="_blank" rel="noopener">Talk on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">© 2026 Leslie Car · Car sales · Simple page ready for GitHub Pages</div>
+  </footer>
+
+  <script>
+    const WHATSAPP_NUMBER = '17862459777';
+
+    const form = document.getElementById('leadForm');
+    const successBox = document.getElementById('successBox');
+
+    function buildWhatsAppLink(message) {
+      return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    }
+
+    function updateStaticLinks() {
+      const links = document.querySelectorAll('#topWhatsapp, #heroWhatsapp, #bottomWhatsapp');
+      links.forEach(link => {
+        const current = new URL(link.href);
+        const text = current.searchParams.get('text') || 'Hello, I want information about cars.';
+        link.href = buildWhatsAppLink(text);
+      });
+    }
+
+    updateStaticLinks();
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const model = document.getElementById('model').value.trim();
+      const budget = document.getElementById('budget').value.trim();
+      const dealType = document.getElementById('dealType').value.trim();
+      const credit = document.getElementById('credit').value.trim();
+      const details = document.getElementById('details').value.trim();
+
+      const message = [
+        'Hello, I want information about buying a car.',
+        '',
+        `Name: ${name || 'Not provided'}`,
+        `Phone: ${phone || 'Not provided'}`,
+        `Area: ${area || 'Not provided'}`,
+        `Model or type: ${model || 'Not provided'}`,
+        `Monthly budget: ${budget || 'Not provided'}`,
+        `Type of deal: ${dealType || 'Not provided'}`,
+        `Credit: ${credit || 'Not provided'}`,
+        `Details: ${details || 'No extra details provided'}`
+      ].join('\n');
+
+      successBox.style.display = 'block';
+      window.open(buildWhatsAppLink(message), '_blank');
+    });
+  </script>
 </body>
 </html>
