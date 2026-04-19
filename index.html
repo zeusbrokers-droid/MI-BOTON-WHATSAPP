@@ -4,27 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Landing Leslie Car</title>
-  <meta name="description" content="Premium bilingual car sales landing page for Leslie Car with WhatsApp lead capture." />
+  <meta
+    name="description"
+    content="Premium bilingual car sales landing page for Leslie Car with WhatsApp and ManyChat lead capture."
+  />
   <style>
     :root {
       --bg: #070b12;
       --bg-2: #0d1420;
       --card: rgba(16, 22, 34, 0.9);
-      --card-2: rgba(20, 27, 40, 0.92);
       --text: #f6f8fc;
       --muted: #a7b3c8;
-      --line: rgba(255,255,255,0.08);
-      --line-strong: rgba(255,255,255,0.14);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.14);
       --green: #2edb73;
       --green-2: #7cffab;
       --gold: #d3b06c;
-      --shadow: 0 24px 80px rgba(0,0,0,0.34);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
       --radius: 24px;
       --max: 1180px;
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -38,7 +41,6 @@
     }
 
     a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
     .wrap { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
 
     .topbar {
@@ -46,7 +48,7 @@
       top: 0;
       z-index: 50;
       backdrop-filter: blur(16px);
-      background: rgba(6,10,16,0.72);
+      background: rgba(6, 10, 16, 0.72);
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
@@ -250,7 +252,13 @@
       font-size: 15px;
     }
 
-    form { display: grid; gap: 12px; position: relative; z-index: 1; }
+    form {
+      display: grid;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
     .field { display: grid; gap: 8px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -289,8 +297,12 @@
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      background-image: linear-gradient(45deg, transparent 50%, #8e9ab0 50%), linear-gradient(135deg, #8e9ab0 50%, transparent 50%);
-      background-position: calc(100% - 20px) calc(50% - 3px), calc(100% - 14px) calc(50% - 3px);
+      background-image:
+        linear-gradient(45deg, transparent 50%, #8e9ab0 50%),
+        linear-gradient(135deg, #8e9ab0 50%, transparent 50%);
+      background-position:
+        calc(100% - 20px) calc(50% - 3px),
+        calc(100% - 14px) calc(50% - 3px);
       background-size: 6px 6px, 6px 6px;
       background-repeat: no-repeat;
       padding-right: 42px;
@@ -313,9 +325,7 @@
       line-height: 1.5;
     }
 
-    .stats {
-      padding: 18px 0 16px;
-    }
+    .stats { padding: 18px 0 16px; }
 
     .stats-grid {
       display: grid;
@@ -340,9 +350,7 @@
       line-height: 1.65;
     }
 
-    .section {
-      padding: 42px 0;
-    }
+    .section { padding: 42px 0; }
 
     .section h2 {
       margin: 0 0 10px;
@@ -407,9 +415,7 @@
       font-weight: 700;
     }
 
-    .cta {
-      padding: 16px 0 74px;
-    }
+    .cta { padding: 16px 0 74px; }
 
     .cta-box {
       padding: 28px;
@@ -441,9 +447,7 @@
     }
 
     @media (max-width: 980px) {
-      .hero-grid,
-      .stats-grid,
-      .grid-3 { grid-template-columns: 1fr; }
+      .hero-grid, .stats-grid, .grid-3 { grid-template-columns: 1fr; }
       .row { grid-template-columns: 1fr; }
       .nav { display: none; }
       .topbar-inner { align-items: flex-start; flex-direction: column; }
@@ -593,11 +597,13 @@
             <h3 data-i18n="feature1Title">Fast entry</h3>
             <p data-i18n="feature1Copy">The client enters, fills the key details, and opens WhatsApp without confusion or extra steps.</p>
           </div>
+
           <div class="feature card">
             <div class="icon">🎯</div>
             <h3 data-i18n="feature2Title">Better lead quality</h3>
             <p data-i18n="feature2Copy">You receive model, area, budget, deal type, and general credit profile before the chat starts.</p>
           </div>
+
           <div class="feature card">
             <div class="icon">🤝</div>
             <h3 data-i18n="feature3Title">Ready for automation</h3>
@@ -618,11 +624,13 @@
             <h3 data-i18n="cat1Title">SUVs and family vehicles</h3>
             <p data-i18n="cat1Copy">Options built around comfort, space, safety, and daily use for couples and growing families.</p>
           </div>
+
           <div class="category card">
             <div class="tag" data-i18n="cat2Tag">Work</div>
             <h3 data-i18n="cat2Title">Cars for Uber and heavy use</h3>
             <p data-i18n="cat2Copy">Focused on efficiency, monthly payment, mileage, and practical use for work-driven buyers.</p>
           </div>
+
           <div class="category card">
             <div class="tag" data-i18n="cat3Tag">Credit Cases</div>
             <h3 data-i18n="cat3Title">Special situations and ITIN</h3>
@@ -641,10 +649,12 @@
             <h3 data-i18n="faq1Title">Can I use this only with WhatsApp?</h3>
             <p data-i18n="faq1Copy">Yes. The page already opens a pre-filled WhatsApp conversation with the lead details.</p>
           </div>
+
           <div class="faq-item card">
             <h3 data-i18n="faq2Title">Can this connect with ManyChat?</h3>
             <p data-i18n="faq2Copy">Yes. The next step can be connecting this landing page to ManyChat for better automation and follow-up.</p>
           </div>
+
           <div class="faq-item card">
             <h3 data-i18n="faq3Title">Can I edit the texts and options later?</h3>
             <p data-i18n="faq3Copy">Yes. Everything is inside one HTML file, so it is simple to adjust from GitHub.</p>
@@ -671,7 +681,19 @@
   </footer>
 
   <script>
+    /**
+     * ===== CONFIG =====
+     * 1) Leave WHATSAPP_NUMBER as is unless your number changes
+     * 2) Paste your ManyChat WhatsApp Ref URL in MANYCHAT_REF_URL
+     * 3) Create these ManyChat keywords:
+     *    - LESLIESTART  -> for button traffic
+     *    - LESLIEFORM   -> for form traffic
+     */
     const WHATSAPP_NUMBER = '17862459777';
+    const MANYCHAT_REF_URL = 'PASTE_YOUR_MANYCHAT_REF_URL_HERE';
+    const MANYCHAT_BUTTON_KEYWORD = 'LESLIESTART';
+    const MANYCHAT_FORM_KEYWORD = 'LESLIEFORM';
+
     let currentLang = 'en';
 
     const translations = {
@@ -739,9 +761,12 @@
         ctaCopy: 'This version is designed to look cleaner, feel more premium, and prepare your page for the next step: linking it with ManyChat and improving the follow-up flow.',
         ctaButton: 'Talk on WhatsApp',
         footerText: '© 2026 Leslie Car · Premium bilingual landing page for car sales',
-        staticTopMessage: 'Hello, I want information about cars.',
-        staticHeroMessage: 'Hello, I need help finding the right car.',
-        staticBottomMessage: 'Hello, I want more information about your car options.',
+        staticTopMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hello, I want information about cars.`,
+        staticHeroMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hello, I need help finding the right car.`,
+        staticBottomMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hello, I want more information about your car options.`,
         leadIntro: 'Hello, I want information about buying a car.',
         lineName: 'Name',
         linePhone: 'Phone',
@@ -818,9 +843,12 @@
         ctaCopy: 'Esta versión está diseñada para verse más limpia, sentirse más premium y dejar tu página lista para el siguiente paso: conectarla con ManyChat y mejorar el seguimiento.',
         ctaButton: 'Hablar por WhatsApp',
         footerText: '© 2026 Leslie Car · Landing premium bilingüe para venta de carros',
-        staticTopMessage: 'Hola, quiero información sobre carros.',
-        staticHeroMessage: 'Hola, necesito ayuda para encontrar el carro correcto.',
-        staticBottomMessage: 'Hola, quiero más información sobre sus opciones de carros.',
+        staticTopMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hola, quiero información sobre carros.`,
+        staticHeroMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hola, necesito ayuda para encontrar el carro correcto.`,
+        staticBottomMessage: `${MANYCHAT_BUTTON_KEYWORD}
+Hola, quiero más información sobre sus opciones de carros.`,
         leadIntro: 'Hola, quiero información para comprar un carro.',
         lineName: 'Nombre',
         linePhone: 'Teléfono',
@@ -854,16 +882,28 @@
       return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     }
 
+    function getManyChatButtonLink(lang) {
+      const hasRefUrl =
+        MANYCHAT_REF_URL &&
+        MANYCHAT_REF_URL !== 'PASTE_YOUR_MANYCHAT_REF_URL_HERE';
+
+      if (hasRefUrl) return MANYCHAT_REF_URL;
+
+      return buildWhatsAppLink(translations[lang].staticTopMessage);
+    }
+
     function fillSelect(id, items) {
       const select = document.getElementById(id);
       const currentValue = select.value;
       select.innerHTML = '';
+
       items.forEach((item, index) => {
         const option = document.createElement('option');
         option.value = index === 0 ? '' : item;
         option.textContent = item;
         select.appendChild(option);
       });
+
       if ([...select.options].some(opt => opt.value === currentValue)) {
         select.value = currentValue;
       }
@@ -877,9 +917,10 @@
     }
 
     function updateStaticLinks(lang) {
-      document.getElementById('topWhatsapp').href = buildWhatsAppLink(translations[lang].staticTopMessage);
-      document.getElementById('heroWhatsapp').href = buildWhatsAppLink(translations[lang].staticHeroMessage);
-      document.getElementById('bottomWhatsapp').href = buildWhatsAppLink(translations[lang].staticBottomMessage);
+      const buttonLink = getManyChatButtonLink(lang);
+      document.getElementById('topWhatsapp').href = buttonLink;
+      document.getElementById('heroWhatsapp').href = buttonLink;
+      document.getElementById('bottomWhatsapp').href = buttonLink;
     }
 
     function applyTranslations(lang) {
@@ -915,7 +956,7 @@
     const form = document.getElementById('leadForm');
     const successBox = document.getElementById('successBox');
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const t = translations[currentLang];
@@ -929,6 +970,7 @@
       const details = document.getElementById('details').value.trim();
 
       const message = [
+        MANYCHAT_FORM_KEYWORD,
         t.leadIntro,
         '',
         `${t.lineName}: ${name || t.notProvided}`,
@@ -939,8 +981,7 @@
         `${t.lineDealType}: ${dealType || t.notProvided}`,
         `${t.lineCredit}: ${credit || t.notProvided}`,
         `${t.lineDetails}: ${details || t.noExtra}`
-      ].join('
-');
+      ].join('\n');
 
       successBox.style.display = 'block';
       successBox.textContent = t.successText;
