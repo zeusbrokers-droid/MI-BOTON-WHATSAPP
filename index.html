@@ -11,6 +11,13 @@
     content="Asesoría automotriz premium en Miami para compra, leasing y opciones de financiamiento. Atención personalizada por WhatsApp."
   />
 
+  <meta property="og:title" content="Leslie Car Miami" />
+  <meta
+    property="og:description"
+    content="Asesoría automotriz premium en Miami. Compra, leasing y opciones de financiamiento con atención personalizada."
+  />
+  <meta property="og:type" content="website" />
+
   <style>
     :root {
       --bg: #070b12;
@@ -63,7 +70,7 @@
       top: 0;
       z-index: 50;
       backdrop-filter: blur(16px);
-      background: rgba(6, 10, 16, 0.76);
+      background: rgba(6, 10, 16, 0.78);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
@@ -160,6 +167,7 @@
       justify-content: center;
       gap: 10px;
       font-size: 15px;
+      text-align: center;
     }
 
     .btn:hover {
@@ -261,6 +269,19 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
     }
 
+    .lead-card::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -80px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: rgba(37, 211, 102, 0.10);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
     .card-title {
       margin: 0 0 8px;
       font-size: 34px;
@@ -303,12 +324,13 @@
     select {
       width: 100%;
       border: 1px solid var(--line-strong);
-      background: rgba(27, 35, 50, 0.95);
+      background-color: rgba(27, 35, 50, 0.95);
       color: var(--text);
       border-radius: 16px;
       padding: 14px 16px;
       font-size: 15px;
       outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
     }
 
     input:focus,
@@ -316,11 +338,42 @@
     select:focus {
       border-color: rgba(211, 176, 108, 0.6);
       box-shadow: 0 0 0 4px rgba(211, 176, 108, 0.10);
+      background-color: rgba(32, 41, 58, 0.98);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #8e9ab0;
     }
 
     textarea {
       min-height: 96px;
       resize: vertical;
+    }
+
+    select {
+      min-height: 48px;
+      padding: 14px 42px 14px 16px;
+      font-weight: 500;
+      cursor: pointer;
+
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      background-image:
+        linear-gradient(45deg, transparent 50%, #a7b3c8 50%),
+        linear-gradient(135deg, #a7b3c8 50%, transparent 50%);
+      background-position:
+        calc(100% - 20px) calc(50% - 3px),
+        calc(100% - 14px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    option {
+      background-color: #111827;
+      color: #f6f8fc;
     }
 
     .form-note,
@@ -791,7 +844,6 @@
 
   <script>
     const WHATSAPP_NUMBER = "17862459777";
-
     const MANYCHAT_REF_URL = "";
 
     let currentLang = "es";
@@ -804,8 +856,7 @@
         topWhatsapp: "Chatear por WhatsApp",
         eyebrow: "🚗 Asesoría automotriz premium en Miami",
         heroTitle: "Encuentra el vehículo correcto más rápido, con mejor guía y seguimiento real.",
-        heroCopy:
-          'Cuéntanos qué buscas, tu presupuesto y tu situación. <strong>Leslie Car Miami</strong> te ayuda a avanzar por WhatsApp con una experiencia más clara, rápida y personalizada.',
+        heroCopy: 'Cuéntanos qué buscas, tu presupuesto y tu situación. <strong>Leslie Car Miami</strong> te ayuda a avanzar por WhatsApp con una experiencia más clara, rápida y personalizada.',
         heroPrimary: "Hablar ahora",
         heroSecondary: "Quiero que me contacten",
         pill1: "Respuesta rápida",
@@ -834,8 +885,7 @@
         stat2: "Te guiamos según tipo de vehículo, presupuesto y tipo de operación.",
         stat3: "Si tu caso encaja, te movemos al siguiente paso con seguimiento claro.",
         howTitle: "Cómo funciona",
-        howCopy:
-          "Esta landing premium bilingüe está diseñada para atraer clientes interesados en vehículos, calificarlos mejor y enviarlos directo a WhatsApp con una conversación más clara desde el primer mensaje.",
+        howCopy: "Esta landing premium bilingüe está diseñada para atraer clientes interesados en vehículos, calificarlos mejor y enviarlos directo a WhatsApp con una conversación más clara desde el primer mensaje.",
         feature1Title: "Entrada rápida",
         feature1Copy: "El cliente entra, llena los datos clave y abre WhatsApp sin confusión ni pasos extra.",
         feature2Title: "Mejor calidad de lead",
@@ -885,8 +935,7 @@
         topWhatsapp: "Chat on WhatsApp",
         eyebrow: "🚗 Premium automotive guidance in Miami",
         heroTitle: "Find the right vehicle faster, with better guidance and real follow-up.",
-        heroCopy:
-          'Tell us what you are looking for, your budget, and your situation. <strong>Leslie Car Miami</strong> helps you move faster through WhatsApp with a cleaner and more personal experience.',
+        heroCopy: 'Tell us what you are looking for, your budget, and your situation. <strong>Leslie Car Miami</strong> helps you move faster through WhatsApp with a cleaner and more personal experience.',
         heroPrimary: "Talk now",
         heroSecondary: "I want to be contacted",
         pill1: "Fast response",
@@ -915,8 +964,7 @@
         stat2: "We guide you based on vehicle type, budget, and deal type.",
         stat3: "If your case fits, we move you to the next step with clear follow-up.",
         howTitle: "How it works",
-        howCopy:
-          "This premium bilingual landing page is designed to attract vehicle leads, qualify them better, and send them directly to WhatsApp with a cleaner conversation from the first message.",
+        howCopy: "This premium bilingual landing page is designed to attract vehicle leads, qualify them better, and send them directly to WhatsApp with a cleaner conversation from the first message.",
         feature1Title: "Fast entry",
         feature1Copy: "The client enters, fills the key details, and opens WhatsApp without confusion or extra steps.",
         feature2Title: "Better lead quality",
@@ -1151,10 +1199,7 @@
       window.open(buildWhatsAppLink(message), "_blank");
     });
 
-    const browserLang = navigator.language || navigator.userLanguage || "es";
-    const initialLang = browserLang.toLowerCase().startsWith("en") ? "en" : "es";
-
-    applyTranslations(initialLang);
+    applyTranslations("es");
   </script>
 </body>
 </html>
