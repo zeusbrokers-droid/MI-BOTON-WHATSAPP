@@ -76,6 +76,35 @@
     .glass, .card { background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)); border: 1px solid var(--line); box-shadow: var(--shadow); border-radius: var(--radius); }
     .lead-card { padding: 24px; position: relative; overflow: hidden; background: radial-gradient(circle at top right, rgba(211, 176, 108, 0.11), transparent 28%), linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)); }
     .lead-card::after { content: ""; position: absolute; right: -80px; bottom: -80px; width: 190px; height: 190px; border-radius: 50%; background: rgba(37, 211, 102, 0.10); filter: blur(18px); pointer-events: none; }
+    .assistant-shell { position: relative; z-index: 1; }
+    .assistant-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .assistant-status { display: inline-flex; align-items: center; gap: 8px; color: #cef6dc; font-size: 13px; font-weight: 800; }
+    .assistant-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(37,211,102,.12); }
+    .assistant-reset { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; padding: 7px 4px; }
+    .assistant-reset:hover { color: var(--text); }
+    .assistant-progress-copy { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; font-weight: 700; margin-bottom: 7px; }
+    .assistant-progress { height: 6px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; margin-bottom: 16px; }
+    .assistant-progress span { display: block; width: 5%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), var(--green)); transition: width .25s ease; }
+    .assistant-chat { height: 310px; overflow-y: auto; display: flex; flex-direction: column; gap: 11px; padding: 4px 4px 14px; scroll-behavior: smooth; }
+    .chat-message { display: flex; align-items: flex-end; gap: 8px; animation: chatIn .2s ease both; }
+    .chat-message.user { justify-content: flex-end; }
+    .chat-avatar { width: 30px; height: 30px; flex: 0 0 30px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #161109; font-size: 11px; font-weight: 900; }
+    .chat-bubble { max-width: 84%; padding: 11px 13px; border-radius: 17px 17px 17px 5px; background: rgba(255,255,255,.08); border: 1px solid var(--line); color: var(--text); font-size: 14px; line-height: 1.48; white-space: pre-line; }
+    .chat-message.user .chat-bubble { border-radius: 17px 17px 5px 17px; background: rgba(37,211,102,.15); border-color: rgba(37,211,102,.23); }
+    .assistant-controls { min-height: 54px; padding-top: 13px; border-top: 1px solid var(--line); position: relative; z-index: 1; }
+    .chat-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .chat-choice { appearance: none; border: 1px solid var(--line-strong); background: rgba(255,255,255,.04); color: var(--text); border-radius: 13px; padding: 11px 10px; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+    .chat-choice:hover { border-color: rgba(211,176,108,.55); background: rgba(211,176,108,.09); }
+    .chat-input-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .chat-input-row input { min-width: 0; padding: 12px 14px; border-radius: 13px; }
+    .chat-send { border: 0; border-radius: 13px; padding: 0 16px; color: #07130c; background: linear-gradient(135deg, var(--green), var(--green-2)); font-weight: 900; cursor: pointer; }
+    .chat-skip { width: 100%; margin-top: 8px; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; }
+    .assistant-privacy { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .whatsapp-ready { padding: 15px; border-radius: 16px; background: rgba(37,211,102,.10); border: 1px solid rgba(37,211,102,.24); }
+    .whatsapp-ready strong { display: block; margin-bottom: 6px; }
+    .whatsapp-ready p { margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .whatsapp-ready .btn { width: 100%; }
+    @keyframes chatIn { from { opacity: 0; transform: translateY(5px); } }
     .card-title { margin: 0 0 8px; font-size: 34px; letter-spacing: -1px; }
     .card-sub { margin: 0 0 22px; color: var(--muted); line-height: 1.6; font-size: 15px; }
     form { display: grid; gap: 12px; position: relative; z-index: 1; }
@@ -126,6 +155,8 @@
       .cta-box { padding: 22px; }
       .card-title { font-size: 28px; }
       .hero-logo { width: min(200px, 70vw); }
+      .assistant-chat { height: 340px; }
+      .chat-choices { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -175,51 +206,19 @@
             <img class="hero-logo" src="https://raw.githubusercontent.com/zeusbrokers-droid/MI-BOTON-WHATSAPP/main/logo.png" alt="Leslie Car Miami" />
           </div>
           <div class="lead-card glass" id="leadForm">
-            <h2 class="card-title" data-i18n="formTitle">Cuéntanos tu caso</h2>
-            <p class="card-sub" data-i18n="formSub">Completa el formulario y abre tu conversación de WhatsApp con tus datos ya organizados.</p>
-            <form id="theForm">
-              <div class="field">
-                <label for="name" data-i18n="labelName">Nombre</label>
-                <input id="name" name="name" type="text" placeholder="Tu nombre" data-i18n-placeholder="phName" required />
+            <h2 class="card-title" data-i18n="formTitle">Tu asistente de compra</h2>
+            <p class="card-sub" data-i18n="formSub">Responde una pregunta a la vez. Al final podrás enviarle tu solicitud completa a Leslie por WhatsApp.</p>
+            <div class="assistant-shell" id="salesAssistant">
+              <div class="assistant-head">
+                <span class="assistant-status" data-i18n="assistantStatus">Asistente disponible</span>
+                <button class="assistant-reset" id="assistantReset" type="button" data-i18n="assistantReset">Reiniciar</button>
               </div>
-              <div class="row">
-                <div class="field">
-                  <label for="phone" data-i18n="labelPhone">Teléfono</label>
-                  <input id="phone" name="phone" type="tel" placeholder="Tu número de teléfono" data-i18n-placeholder="phPhone" />
-                </div>
-                <div class="field">
-                  <label for="area" data-i18n="labelArea">Zona</label>
-                  <input id="area" name="area" type="text" placeholder="Ej. Miami, Hialeah, Doral" data-i18n-placeholder="phArea" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <label for="model" data-i18n="labelModel">Tipo de vehículo</label>
-                  <select id="model" name="model"></select>
-                </div>
-                <div class="field">
-                  <label for="budget" data-i18n="labelBudget">Presupuesto mensual</label>
-                  <select id="budget" name="budget"></select>
-                </div>
-              </div>
-              <div class="row">
-                <div class="field">
-                  <label for="dealType" data-i18n="labelDealType">Tipo de operación</label>
-                  <select id="dealType" name="dealType"></select>
-                </div>
-                <div class="field">
-                  <label for="credit" data-i18n="labelCredit">Situación de crédito</label>
-                  <select id="credit" name="credit"></select>
-                </div>
-              </div>
-              <div class="field">
-                <label for="details" data-i18n="labelDetails">Cuéntanos más</label>
-                <textarea id="details" name="details" data-i18n-placeholder="phDetails" placeholder="Ej. necesito un vehículo familiar, quiero entregar mi carro actual, busco bajo pago mensual, etc."></textarea>
-              </div>
-              <button class="btn btn-primary" type="submit" data-i18n="formButton">Abrir WhatsApp con mis datos</button>
-              <div class="success" id="successBox" data-i18n="successText">Listo. WhatsApp se abrirá con tu información preparada.</div>
-              <div class="form-note" data-i18n="formNote">Captación rápida y simple para compradores serios.</div>
-            </form>
+              <div class="assistant-progress-copy"><span data-i18n="assistantProgress">Tu progreso</span><span id="assistantProgressLabel">5%</span></div>
+              <div class="assistant-progress" aria-hidden="true"><span id="assistantProgressBar"></span></div>
+              <div class="assistant-chat" id="assistantChat" role="log" aria-live="polite" aria-relevant="additions"></div>
+              <div class="assistant-controls" id="assistantControls"></div>
+              <p class="assistant-privacy" id="assistantPrivacy" data-i18n="assistantPrivacy">Tus respuestas permanecen en este dispositivo hasta que decidas enviarlas. No pedimos números completos de SSN/ITIN ni información bancaria.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -240,7 +239,7 @@
         <div class="grid-3">
           <div class="feature card"><div class="icon">📲</div><h3 data-i18n="feature1Title">Entrada rápida</h3><p data-i18n="feature1Copy">El cliente entra, llena los datos clave y abre WhatsApp sin confusión ni pasos extra.</p></div>
           <div class="feature card"><div class="icon">🎯</div><h3 data-i18n="feature2Title">Mejor calidad de lead</h3><p data-i18n="feature2Copy">Recibes tipo de vehículo, zona, presupuesto, tipo de operación y perfil general antes de empezar el chat.</p></div>
-          <div class="feature card"><div class="icon">🤝</div><h3 data-i18n="feature3Title">Lista para automatizar</h3><p data-i18n="feature3Copy">Luego esta página puede conectarse con ManyChat, CRM, formularios o seguimiento manual.</p></div>
+          <div class="feature card"><div class="icon">🤝</div><h3 data-i18n="feature3Title">Pasa a Leslie</h3><p data-i18n="feature3Copy">Al terminar, WhatsApp abre una ficha organizada que el cliente puede revisar antes de enviarla.</p></div>
         </div>
       </div>
     </section>
@@ -262,7 +261,7 @@
         <h2 data-i18n="faqTitle">Preguntas frecuentes</h2>
         <div class="grid-3">
           <div class="faq-item card"><h3 data-i18n="faq1Title">¿Puedo usar esto solo con WhatsApp?</h3><p data-i18n="faq1Copy">Sí. La página abre una conversación de WhatsApp con los datos del cliente preparados.</p></div>
-          <div class="faq-item card"><h3 data-i18n="faq2Title">¿Se puede conectar con ManyChat?</h3><p data-i18n="faq2Copy">Sí. El siguiente paso puede ser conectar esta landing con ManyChat para automatizar mejor el seguimiento.</p></div>
+          <div class="faq-item card"><h3 data-i18n="faq2Title">¿Mis datos se guardan?</h3><p data-i18n="faq2Copy">No. Las respuestas permanecen en tu dispositivo y solo se comparten si decides enviarlas por WhatsApp.</p></div>
           <div class="faq-item card"><h3 data-i18n="faq3Title">¿Prometen aprobación?</h3><p data-i18n="faq3Copy">No. Revisamos cada caso de forma responsable y damos orientación según la información disponible.</p></div>
         </div>
       </div>
@@ -286,33 +285,34 @@
   </footer>
 
   <script>
-    const WHATSAPP_NUMBER = "17862459777";
-    const MANYCHAT_REF_URL = "";
+    const WHATSAPP_NUMBER = "17864513280";
     let currentLang = "es";
     const translations = {
       es: {
-        navHow:"Cómo funciona",navOptions:"Opciones",navFaq:"Preguntas",topWhatsapp:"Chatear por WhatsApp",
+        navHow:"Cómo funciona",navOptions:"Opciones",navFaq:"Preguntas",topWhatsapp:"Iniciar asistente",
         eyebrow:"🚗 Asesoría automotriz premium en Miami",
         heroTitle:"Encuentra el vehículo correcto más rápido, con mejor guía y seguimiento real.",
         heroCopy:'Cuéntanos qué buscas, tu presupuesto y tu situación. <strong>Leslie Car Miami</strong> te ayuda a avanzar por WhatsApp con una experiencia más clara, rápida y personalizada.',
-        heroPrimary:"Hablar ahora",heroSecondary:"Quiero que me contacten",
+        heroPrimary:"Iniciar asistente",heroSecondary:"Quiero que me contacten",
         pill1:"Respuesta rápida",pill2:"Atención bilingüe",pill3:"Compra, leasing o financiamiento",pill4:"Seguimiento personalizado",
         heroDisclaimer:"No prometemos aprobaciones ni precios exactos. Cada caso se revisa de forma responsable.",
-        formTitle:"Cuéntanos tu caso",formSub:"Completa el formulario y abre tu conversación de WhatsApp con tus datos ya organizados.",
+        formTitle:"Tu asistente de compra",formSub:"Responde una pregunta a la vez. Al final podrás enviarle tu solicitud completa a Leslie por WhatsApp.",
+        assistantStatus:"Asistente disponible",assistantReset:"Reiniciar",assistantProgress:"Tu progreso",
+        assistantPrivacy:"Tus respuestas permanecen en este dispositivo hasta que decidas enviarlas. No pedimos números completos de SSN/ITIN ni información bancaria.",
         labelName:"Nombre",labelPhone:"Teléfono",labelArea:"Zona",labelModel:"Tipo de vehículo",
         labelBudget:"Presupuesto mensual",labelDealType:"Tipo de operación",labelCredit:"Situación de crédito",labelDetails:"Cuéntanos más",
         phName:"Tu nombre",phPhone:"Tu número de teléfono",phArea:"Ej. Miami, Hialeah, Doral",
         phDetails:"Ej. necesito un vehículo familiar, quiero entregar mi carro actual, busco bajo pago mensual, etc.",
         formButton:"Abrir WhatsApp con mis datos",successText:"Listo. WhatsApp se abrirá con tu información preparada.",
         formNote:"Captación rápida y simple para compradores serios.",
-        stat1:"Nos escribes por WhatsApp y revisamos tu caso rápidamente.",
-        stat2:"Te guiamos según tipo de vehículo, presupuesto y tipo de operación.",
-        stat3:"Si tu caso encaja, te movemos al siguiente paso con seguimiento claro.",
+        stat1:"Responde preguntas rápidas, una por una, desde tu teléfono.",
+        stat2:"El asistente organiza vehículo, presupuesto, pago y urgencia.",
+        stat3:"Tú revisas la ficha y decides si enviarla a Leslie por WhatsApp.",
         howTitle:"Cómo funciona",
-        howCopy:"Esta landing premium bilingüe está diseñada para atraer clientes interesados en vehículos, calificarlos mejor y enviarlos directo a WhatsApp con una conversación más clara desde el primer mensaje.",
-        feature1Title:"Entrada rápida",feature1Copy:"El cliente entra, llena los datos clave y abre WhatsApp sin confusión ni pasos extra.",
+        howCopy:"El asistente conversa con cada prospecto, reúne la información necesaria y prepara una ficha clara para continuar directamente con Leslie.",
+        feature1Title:"Entrada rápida",feature1Copy:"El cliente responde una sola pregunta a la vez desde un chat sencillo y móvil.",
         feature2Title:"Mejor calidad de lead",feature2Copy:"Recibes tipo de vehículo, zona, presupuesto, tipo de operación y perfil general antes de empezar el chat.",
-        feature3Title:"Lista para automatizar",feature3Copy:"Luego esta página puede conectarse con ManyChat, CRM, formularios o seguimiento manual.",
+        feature3Title:"Pasa a Leslie",feature3Copy:"Al terminar, WhatsApp abre una ficha organizada que el cliente puede revisar antes de enviarla.",
         inventoryTitle:"Opciones que puedes revisar",
         inventoryCopy:"Trabajamos con clientes que buscan diferentes tipos de vehículos y necesitan orientación antes de tomar una decisión.",
         cat1Tag:"Familias",cat1Title:"SUV y vehículos familiares",cat1Copy:"Opciones pensadas para comodidad, espacio, seguridad y uso diario.",
@@ -320,10 +320,10 @@
         cat3Tag:"Casos especiales",cat3Title:"Financiamiento e ITIN",cat3Copy:"Ideal para clientes que necesitan orientación antes de tomar el siguiente paso.",
         faqTitle:"Preguntas frecuentes",
         faq1Title:"¿Puedo usar esto solo con WhatsApp?",faq1Copy:"Sí. La página abre una conversación de WhatsApp con los datos del cliente preparados.",
-        faq2Title:"¿Se puede conectar con ManyChat?",faq2Copy:"Sí. El siguiente paso puede ser conectar esta landing con ManyChat para automatizar mejor el seguimiento.",
+        faq2Title:"¿Mis datos se guardan?",faq2Copy:"No. Las respuestas permanecen en tu dispositivo y solo se comparten si decides enviarlas por WhatsApp.",
         faq3Title:"¿Prometen aprobación?",faq3Copy:"No. Revisamos cada caso de forma responsable y damos orientación según la información disponible.",
-        ctaTitle:"¿Listo para revisar tus opciones?",ctaCopy:"Escríbenos por WhatsApp y cuéntanos qué tipo de vehículo estás buscando.",
-        ctaButton:"Hablar por WhatsApp",
+        ctaTitle:"¿Listo para revisar tus opciones?",ctaCopy:"Responde unas preguntas rápidas para que Leslie reciba tu solicitud organizada.",
+        ctaButton:"Iniciar asistente",
         footerText:"© 2026 Leslie Car Miami · Powered by Zeus Brokers · Asesoría automotriz premium",
         staticMessage:"Hola, vengo de Leslie Car Miami y quiero revisar opciones de vehículo.",
         leadIntro:"Hola, vengo de Leslie Car Miami y quiero revisar opciones de vehículo.",
@@ -332,28 +332,30 @@
         notProvided:"No indicado",noExtra:"No indicó más detalles"
       },
       en: {
-        navHow:"How it works",navOptions:"Options",navFaq:"FAQ",topWhatsapp:"Chat on WhatsApp",
+        navHow:"How it works",navOptions:"Options",navFaq:"FAQ",topWhatsapp:"Start assistant",
         eyebrow:"🚗 Premium automotive guidance in Miami",
         heroTitle:"Find the right vehicle faster, with better guidance and real follow-up.",
         heroCopy:'Tell us what you are looking for, your budget, and your situation. <strong>Leslie Car Miami</strong> helps you move faster through WhatsApp with a cleaner and more personal experience.',
-        heroPrimary:"Talk now",heroSecondary:"I want to be contacted",
+        heroPrimary:"Start assistant",heroSecondary:"I want to be contacted",
         pill1:"Fast response",pill2:"Bilingual support",pill3:"Purchase, leasing or financing",pill4:"Personal follow-up",
         heroDisclaimer:"We do not promise approvals or exact prices. Every case is reviewed responsibly.",
-        formTitle:"Tell us about your case",formSub:"Fill out the form and open WhatsApp with your details already organized.",
+        formTitle:"Your car-buying assistant",formSub:"Answer one question at a time. At the end, you can send your complete request to Leslie on WhatsApp.",
+        assistantStatus:"Assistant available",assistantReset:"Restart",assistantProgress:"Your progress",
+        assistantPrivacy:"Your answers stay on this device until you choose to send them. We never request full SSN/ITIN numbers or banking information.",
         labelName:"Name",labelPhone:"Phone",labelArea:"Area",labelModel:"Vehicle type",
         labelBudget:"Monthly budget",labelDealType:"Type of deal",labelCredit:"Credit situation",labelDetails:"Tell us more",
         phName:"Your name",phPhone:"Your phone number",phArea:"Ex. Miami, Hialeah, Doral",
         phDetails:"Ex. I need a family vehicle, I want to trade in my current car, I need a low monthly payment, etc.",
         formButton:"Open WhatsApp with my details",successText:"Done. WhatsApp will open with your information ready.",
         formNote:"Fast and simple lead capture for serious buyers.",
-        stat1:"You contact us through WhatsApp and we review your case quickly.",
-        stat2:"We guide you based on vehicle type, budget, and deal type.",
-        stat3:"If your case fits, we move you to the next step with clear follow-up.",
+        stat1:"Answer quick questions, one at a time, from your phone.",
+        stat2:"The assistant organizes your vehicle, budget, payment, and timing.",
+        stat3:"You review the summary and decide whether to send it to Leslie on WhatsApp.",
         howTitle:"How it works",
-        howCopy:"This premium bilingual landing page is designed to attract vehicle leads, qualify them better, and send them directly to WhatsApp with a cleaner conversation from the first message.",
-        feature1Title:"Fast entry",feature1Copy:"The client enters, fills the key details, and opens WhatsApp without confusion or extra steps.",
+        howCopy:"The assistant talks with each prospect, gathers the necessary information, and prepares a clear summary to continue directly with Leslie.",
+        feature1Title:"Fast entry",feature1Copy:"The client answers one question at a time in a simple, mobile-friendly chat.",
         feature2Title:"Better lead quality",feature2Copy:"You receive vehicle type, area, budget, deal type, and general profile before the chat starts.",
-        feature3Title:"Ready for automation",feature3Copy:"This page can later connect with ManyChat, CRM tools, forms, or manual sales follow-up.",
+        feature3Title:"Continue with Leslie",feature3Copy:"When finished, WhatsApp opens a prepared summary the client can review before sending.",
         inventoryTitle:"Options you can review",
         inventoryCopy:"We help clients looking for different vehicle types who need guidance before making a decision.",
         cat1Tag:"Families",cat1Title:"SUVs and family vehicles",cat1Copy:"Options focused on comfort, space, safety, and daily use.",
@@ -361,10 +363,10 @@
         cat3Tag:"Special cases",cat3Title:"Financing and ITIN",cat3Copy:"Ideal for clients who need more guidance before taking the next step.",
         faqTitle:"Frequently asked questions",
         faq1Title:"Can I use this only with WhatsApp?",faq1Copy:"Yes. The page opens a pre-filled WhatsApp conversation with the client details.",
-        faq2Title:"Can this connect with ManyChat?",faq2Copy:"Yes. The next step can be connecting this landing page to ManyChat for better follow-up automation.",
+        faq2Title:"Are my details stored?",faq2Copy:"No. Your answers stay on your device and are shared only if you choose to send them on WhatsApp.",
         faq3Title:"Do you promise approval?",faq3Copy:"No. We review each case responsibly and provide guidance based on the available information.",
-        ctaTitle:"Ready to review your options?",ctaCopy:"Message us on WhatsApp and tell us what type of vehicle you are looking for.",
-        ctaButton:"Talk on WhatsApp",
+        ctaTitle:"Ready to review your options?",ctaCopy:"Answer a few quick questions so Leslie receives your request already organized.",
+        ctaButton:"Start assistant",
         footerText:"© 2026 Leslie Car Miami · Powered by Zeus Brokers · Premium automotive guidance",
         staticMessage:"Hello, I came from Leslie Car Miami and I want to review vehicle options.",
         leadIntro:"Hello, I came from Leslie Car Miami and I want to review vehicle options.",
@@ -373,66 +375,285 @@
         notProvided:"Not provided",noExtra:"No extra details provided"
       }
     };
-    const selectOptions = {
+    const chatCopy = {
       es: {
-        model:["Selecciona una opción","Sedan","SUV","Pickup","Vehículo de lujo","Vehículo familiar","Vehículo de trabajo","Otro"],
-        budget:["Selecciona una opción","Menos de $400","$400 - $550","$550 - $700","$700 - $900","Más de $900"],
-        dealType:["Selecciona una opción","Compra","Financiamiento","Leasing","Aún no lo sé"],
-        credit:["Selecciona una opción","Buena","Media","Baja","ITIN","Prefiero explicarlo por WhatsApp"]
+        start:"¡Hola! Gracias por escribir a Leslie Car Miami 🚗. ¿Buscas un auto en específico o te gustaría ver las opciones disponibles?",
+        specific:"Busco uno específico", options:"Quiero ver opciones", immediate:"Hablar con Leslie ahora",
+        name:"Perfecto. ¿Cuál es tu nombre?", namePh:"Tu nombre",
+        phone:name=>`Mucho gusto, ${name} 👍 ¿Cuál es el mejor número para que Leslie pueda contactarte?`, phonePh:"Ej. 786 555 0123",
+        area:"¿En qué ciudad o zona te encuentras?", areaPh:"Ej. Miami, Hialeah o Doral",
+        vehicleSpecific:"¿Qué marca y modelo estás buscando?", vehicleSpecificPh:"Ej. Toyota Camry 2022",
+        vehicleType:"Claro 👍 ¿Prefieres SUV, sedán o pickup?", unsure:"No estoy seguro",
+        budget:"¿Qué presupuesto aproximado tienes pensado para el vehículo?", budgetPh:"Ej. $25,000 o $450 al mes",
+        payment:"¿Planeas comprarlo financiado o al contado?", financed:"Financiado", cash:"Al contado", unknown:"Aún no sé",
+        credit:"Perfecto 👍 ¿Cómo consideras tu crédito actualmente?", excellent:"Excelente", good:"Bueno", regular:"Regular", rebuilding:"Reconstruyéndolo", dontKnow:"No sé",
+        downPayment:"¿Con cuánto enganche o inicial cuentas aproximadamente?", downPaymentPh:"Ej. $3,000",
+        idType:"Sin compartir ningún número: ¿cuentas con Social Security o ITIN?", ssn:"Social Security", itin:"ITIN", neither:"Ninguno", discuss:"Prefiero hablarlo con Leslie",
+        license:"¿Tienes licencia de conducir de EE. UU. o pasaporte vigente?", yes:"Sí", no:"No",
+        urgency:"¿Cuándo tienes pensado comprar?", today:"Hoy", week:"Esta semana", month:"Este mes", exploring:"Solo estoy explorando",
+        tradeIn:"¿Tienes algún auto actual que quieras entregar como parte de pago?",
+        tradeVehicle:"Perfecto 👍 ¿Qué año, marca y modelo es?", tradeVehiclePh:"Ej. Honda Accord 2018",
+        contactTime:"¡Perfecto! Ya tengo lo necesario para que Leslie pueda orientarte. ¿A qué hora te queda mejor que te contacte hoy?", contactTimePh:"Ej. Después de las 5:00 p. m.",
+        skip:"Prefiero hablarlo con Leslie", send:"Enviar", invalid:"Revisa la respuesta para continuar.",
+        ready:"Perfecto 👍 Tu solicitud está lista.", readyTitle:"Continuar con Leslie", readyText:"WhatsApp abrirá un mensaje con tus respuestas. Podrás revisarlo antes de enviarlo.", open:"Abrir WhatsApp",
+        immediateText:"Claro 👍 Puedes comunicarte directamente con Leslie por WhatsApp.",
+        privacyDone:"Nada se envía automáticamente. Tú decides si abrir WhatsApp y enviar el mensaje a Leslie.", done:"Solicitud lista"
       },
       en: {
-        model:["Select an option","Sedan","SUV","Pickup","Luxury vehicle","Family vehicle","Work vehicle","Other"],
-        budget:["Select an option","Under $400","$400 - $550","$550 - $700","$700 - $900","Over $900"],
-        dealType:["Select an option","Purchase","Financing","Leasing","Not sure yet"],
-        credit:["Select an option","Good","Average","Low","ITIN","Prefer to explain on WhatsApp"]
+        start:"Hi! Thanks for contacting Leslie Car Miami 🚗. Are you looking for a specific vehicle or would you like to see available options?",
+        specific:"A specific vehicle", options:"Show me options", immediate:"Talk to Leslie now",
+        name:"Perfect. What is your name?", namePh:"Your name",
+        phone:name=>`Nice to meet you, ${name} 👍 What is the best number for Leslie to contact you?`, phonePh:"Ex. 786 555 0123",
+        area:"What city or area are you in?", areaPh:"Ex. Miami, Hialeah, or Doral",
+        vehicleSpecific:"What make and model are you looking for?", vehicleSpecificPh:"Ex. Toyota Camry 2022",
+        vehicleType:"Great 👍 Do you prefer an SUV, sedan, or pickup?", unsure:"I'm not sure",
+        budget:"What approximate budget do you have in mind for the vehicle?", budgetPh:"Ex. $25,000 or $450/month",
+        payment:"Are you planning to finance or pay cash?", financed:"Financing", cash:"Cash", unknown:"Not sure yet",
+        credit:"Perfect 👍 How would you describe your credit today?", excellent:"Excellent", good:"Good", regular:"Fair", rebuilding:"Rebuilding", dontKnow:"I don't know",
+        downPayment:"About how much do you have available for a down payment?", downPaymentPh:"Ex. $3,000",
+        idType:"Without sharing any number: do you have Social Security or an ITIN?", ssn:"Social Security", itin:"ITIN", neither:"Neither", discuss:"Prefer to discuss with Leslie",
+        license:"Do you have a U.S. driver's license or a valid passport?", yes:"Yes", no:"No",
+        urgency:"When are you planning to buy?", today:"Today", week:"This week", month:"This month", exploring:"Just exploring",
+        tradeIn:"Do you have a current vehicle you would like to trade in?",
+        tradeVehicle:"Perfect 👍 What year, make, and model is it?", tradeVehiclePh:"Ex. Honda Accord 2018",
+        contactTime:"Perfect! I have what Leslie needs to guide you. What time works best for her to contact you today?", contactTimePh:"Ex. After 5:00 p.m.",
+        skip:"Prefer to discuss with Leslie", send:"Send", invalid:"Please check your answer to continue.",
+        ready:"Perfect 👍 Your request is ready.", readyTitle:"Continue with Leslie", readyText:"WhatsApp will open a message with your answers. You can review it before sending.", open:"Open WhatsApp",
+        immediateText:"Of course 👍 You can contact Leslie directly on WhatsApp.",
+        privacyDone:"Nothing is sent automatically. You decide whether to open WhatsApp and send the message to Leslie.", done:"Request ready"
       }
     };
-    function buildWhatsAppLink(msg) { return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`; }
-    function getMainButtonLink(lang) {
-      if (MANYCHAT_REF_URL && MANYCHAT_REF_URL.trim() !== "") return MANYCHAT_REF_URL;
-      return buildWhatsAppLink(translations[lang].staticMessage);
+
+    const state = { step:"intent", answers:{}, complete:false };
+    const chat = document.getElementById("assistantChat");
+    const controls = document.getElementById("assistantControls");
+    const progressBar = document.getElementById("assistantProgressBar");
+    const progressLabel = document.getElementById("assistantProgressLabel");
+    const privacy = document.getElementById("assistantPrivacy");
+    const option = (value, es, en) => ({ value, label: currentLang === "es" ? es : en });
+    const copy = () => chatCopy[currentLang];
+    const firstName = value => (value || "").trim().split(/\s+/)[0] || "";
+
+    function getStep() {
+      const c = copy();
+      const a = state.answers;
+      return {
+        intent:{ question:c.start, options:[option("specific",c.specific,c.specific),option("options",c.options,c.options),option("immediate",c.immediate,c.immediate)], save:"intent", next:v=>v==="immediate"?"immediate":"name" },
+        name:{ question:c.name, input:"text", placeholder:c.namePh, save:"name", next:()=>"phone" },
+        phone:{ question:c.phone(firstName(a.name)), input:"tel", placeholder:c.phonePh, save:"phone", validate:v=>v.replace(/\D/g,"").length>=7, next:()=>"area" },
+        area:{ question:c.area, input:"text", placeholder:c.areaPh, save:"area", allowSkip:true, next:()=>"vehicle" },
+        vehicle:{ question:a.intent==="specific"?c.vehicleSpecific:c.vehicleType, input:a.intent==="specific"?"text":null, placeholder:c.vehicleSpecificPh, options:a.intent==="specific"?null:[option("SUV","SUV","SUV"),option("Sedán","Sedán","Sedan"),option("Pickup","Pickup","Pickup"),option("No definido",c.unsure,c.unsure)], save:"vehicle", next:()=>"budget" },
+        budget:{ question:c.budget, input:"text", placeholder:c.budgetPh, save:"budget", allowSkip:true, next:()=>"payment" },
+        payment:{ question:c.payment, options:[option("Financiado",c.financed,c.financed),option("Cash",c.cash,c.cash),option("No indicado",c.unknown,c.unknown)], save:"payment", next:v=>v==="Financiado"?"credit":"urgency" },
+        credit:{ question:c.credit, options:[option("Excelente",c.excellent,c.excellent),option("Bueno",c.good,c.good),option("Regular",c.regular,c.regular),option("Reconstruyendo",c.rebuilding,c.rebuilding),option("No sabe",c.dontKnow,c.dontKnow)], save:"credit", next:()=>"downPayment" },
+        downPayment:{ question:c.downPayment, input:"text", placeholder:c.downPaymentPh, save:"downPayment", allowSkip:true, next:()=>"idType" },
+        idType:{ question:c.idType, options:[option("SSN",c.ssn,c.ssn),option("ITIN",c.itin,c.itin),option("Ninguno",c.neither,c.neither),option("No indicado",c.discuss,c.discuss)], save:"idType", next:()=>"license" },
+        license:{ question:c.license, options:[option("Sí",c.yes,c.yes),option("No",c.no,c.no),option("No indicado",c.discuss,c.discuss)], save:"license", next:()=>"urgency" },
+        urgency:{ question:c.urgency, options:[option("Hoy",c.today,c.today),option("Esta semana",c.week,c.week),option("Este mes",c.month,c.month),option("Sin fecha",c.exploring,c.exploring)], save:"urgency", next:()=>"tradeIn" },
+        tradeIn:{ question:c.tradeIn, options:[option("Sí",c.yes,c.yes),option("No",c.no,c.no)], save:"tradeIn", next:v=>v==="Sí"?"tradeVehicle":"contactTime" },
+        tradeVehicle:{ question:c.tradeVehicle, input:"text", placeholder:c.tradeVehiclePh, save:"tradeVehicle", next:()=>"contactTime" },
+        contactTime:{ question:c.contactTime, input:"text", placeholder:c.contactTimePh, save:"contactTime", next:()=>"complete" }
+      }[state.step];
     }
-    function fillSelect(id, items) {
-      const s = document.getElementById(id), cur = s.value;
-      s.innerHTML = "";
-      items.forEach((item, i) => { const o = document.createElement("option"); o.value = i === 0 ? "" : item; o.textContent = item; s.appendChild(o); });
-      if ([...s.options].some(o => o.value === cur)) s.value = cur;
+
+    function addMessage(text, role="assistant") {
+      const item = document.createElement("div");
+      item.className = `chat-message ${role === "user" ? "user" : ""}`;
+      if (role === "assistant") {
+        const avatar = document.createElement("span");
+        avatar.className = "chat-avatar";
+        avatar.textContent = "LC";
+        item.appendChild(avatar);
+      }
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      bubble.textContent = text;
+      item.appendChild(bubble);
+      chat.appendChild(item);
+      requestAnimationFrame(()=>chat.scrollTop=chat.scrollHeight);
     }
-    function updateSelects(lang) { ["model","budget","dealType","credit"].forEach(id => fillSelect(id, selectOptions[lang][id])); }
-    function updateStaticLinks(lang) {
-      const link = getMainButtonLink(lang);
-      ["topWhatsapp","heroWhatsapp","bottomWhatsapp"].forEach(id => document.getElementById(id).href = link);
+
+    function renderControls(step) {
+      controls.innerHTML = "";
+      if (step.options) {
+        const wrap = document.createElement("div");
+        wrap.className = "chat-choices";
+        step.options.forEach(item=>{
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "chat-choice";
+          button.textContent = item.label;
+          button.addEventListener("click",()=>answer(item.label,item.value,step));
+          wrap.appendChild(button);
+        });
+        controls.appendChild(wrap);
+        return;
+      }
+      const form = document.createElement("form");
+      form.className = "chat-input-row";
+      const input = document.createElement("input");
+      input.type = step.input;
+      input.placeholder = step.placeholder || "";
+      input.autocomplete = step.input === "tel" ? "tel" : "off";
+      input.setAttribute("aria-label",step.question);
+      const send = document.createElement("button");
+      send.type = "submit";
+      send.className = "chat-send";
+      send.textContent = copy().send;
+      form.append(input,send);
+      form.addEventListener("submit",event=>{
+        event.preventDefault();
+        const value = input.value.trim();
+        if (!value || (step.validate && !step.validate(value))) {
+          input.setCustomValidity(copy().invalid);
+          input.reportValidity();
+          input.setCustomValidity("");
+          return;
+        }
+        answer(value,value,step);
+      });
+      controls.appendChild(form);
+      if (step.allowSkip) {
+        const skip = document.createElement("button");
+        skip.type = "button";
+        skip.className = "chat-skip";
+        skip.textContent = copy().skip;
+        skip.addEventListener("click",()=>answer(copy().skip,"No indicado",step));
+        controls.appendChild(skip);
+      }
     }
-    function applyTranslations(lang) {
-      currentLang = lang;
-      document.documentElement.lang = lang;
-      document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.getAttribute("data-i18n"); if (translations[lang][k]) el.textContent = translations[lang][k]; });
-      document.querySelectorAll("[data-i18n-html]").forEach(el => { const k = el.getAttribute("data-i18n-html"); if (translations[lang][k]) el.innerHTML = translations[lang][k]; });
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => { const k = el.getAttribute("data-i18n-placeholder"); if (translations[lang][k]) el.placeholder = translations[lang][k]; });
-      updateSelects(lang); updateStaticLinks(lang);
-      document.getElementById("langEs").classList.toggle("active", lang === "es");
-      document.getElementById("langEn").classList.toggle("active", lang === "en");
+
+    function answer(label,value,step) {
+      if (state.complete) return;
+      controls.querySelectorAll("button,input").forEach(el=>el.disabled=true);
+      addMessage(label,"user");
+      state.answers[step.save]=value;
+      state.step=step.next(value);
+      controls.innerHTML="";
+      renderStep();
     }
-    document.getElementById("langEs").addEventListener("click", () => applyTranslations("es"));
-    document.getElementById("langEn").addEventListener("click", () => applyTranslations("en"));
-    document.getElementById("theForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const t = translations[currentLang];
-      const v = id => document.getElementById(id).value.trim();
-      const msg = [t.leadIntro,"",
-        `${t.lineName}: ${v("name")||t.notProvided}`,
-        `${t.linePhone}: ${v("phone")||t.notProvided}`,
-        `${t.lineArea}: ${v("area")||t.notProvided}`,
-        `${t.lineModel}: ${v("model")||t.notProvided}`,
-        `${t.lineBudget}: ${v("budget")||t.notProvided}`,
-        `${t.lineDealType}: ${v("dealType")||t.notProvided}`,
-        `${t.lineCredit}: ${v("credit")||t.notProvided}`,
-        `${t.lineDetails}: ${v("details")||t.noExtra}`
+
+    function renderStep() {
+      if (state.step === "complete") return finish();
+      if (state.step === "immediate") return finishImmediate();
+      updateProgress();
+      const step = getStep();
+      setTimeout(()=>{ addMessage(step.question); renderControls(step); },180);
+    }
+
+    function qualification() {
+      const a=state.answers;
+      const hasVehicle=a.vehicle && a.vehicle!=="No definido";
+      const hasBudget=a.budget && a.budget!=="No indicado";
+      const hasInitial=a.downPayment && a.downPayment!=="No indicado";
+      const urgent=a.urgency==="Hoy" || a.urgency==="Esta semana";
+      if (urgent && hasVehicle && (hasBudget || hasInitial) && a.contactTime) return "🔥";
+      if (["Esta semana","Este mes"].includes(a.urgency) || hasVehicle || a.payment==="Financiado" || hasBudget) return "🟡";
+      return "❄️";
+    }
+
+    function buildLeadMessage() {
+      const a=state.answers;
+      return [
+        `${qualification()} NUEVO PROSPECTO DE LESLIE CAR MIAMI`,
+        `Idioma: ${currentLang === "es" ? "Español" : "English"}`,
+        "",
+        `Cliente: ${a.name||"No indicado"}`,
+        `Teléfono: ${a.phone||"No indicado"}`,
+        `Zona: ${a.area||"No indicado"}`,
+        `Busca: ${a.vehicle||"No indicado"}`,
+        `Presupuesto: ${a.budget||"No indicado"}`,
+        `Pago: ${a.payment||"No indicado"}`,
+        `Crédito declarado: ${a.credit||"No aplica / No indicado"}`,
+        `Inicial: ${a.downPayment||"No aplica / No indicado"}`,
+        `Identificación: ${a.idType||"No indicado"}`,
+        `Licencia/Pasaporte: ${a.license||"No indicado"}`,
+        `Trade-in: ${a.tradeIn||"No indicado"}${a.tradeVehicle?` — ${a.tradeVehicle}`:""}`,
+        `Urgencia: ${a.urgency||"No indicado"}`,
+        `Hora solicitada: ${a.contactTime||"No indicado"}`,
+        "",
+        "Hola Leslie, completé el asistente y me gustaría que me contactes."
       ].join("\n");
-      const box = document.getElementById("successBox");
-      box.style.display = "block"; box.textContent = t.successText;
-      window.open(buildWhatsAppLink(msg), "_blank");
-    });
+    }
+
+    function buildWhatsAppLink(message) { return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`; }
+
+    function renderWhatsAppCard(message,immediate=false) {
+      const c=copy();
+      controls.innerHTML="";
+      const card=document.createElement("div");
+      card.className="whatsapp-ready";
+      const title=document.createElement("strong");
+      title.textContent=c.readyTitle;
+      const text=document.createElement("p");
+      text.textContent=immediate?c.immediateText:c.readyText;
+      const link=document.createElement("a");
+      link.className="btn btn-primary";
+      link.target="_blank";
+      link.rel="noopener";
+      link.href=buildWhatsAppLink(message);
+      link.textContent=c.open;
+      card.append(title,text,link);
+      controls.appendChild(card);
+      privacy.textContent=c.privacyDone;
+      chat.scrollTop=chat.scrollHeight;
+    }
+
+    function finish() {
+      state.complete=true;
+      updateProgress(true);
+      setTimeout(()=>{ addMessage(copy().ready); renderWhatsAppCard(buildLeadMessage()); },180);
+    }
+
+    function finishImmediate() {
+      state.complete=true;
+      updateProgress(true);
+      const message=currentLang==="es"?"Hola Leslie, vengo de tu página y quiero hablar contigo sobre un vehículo.":"Hi Leslie, I came from your website and would like to speak with you about a vehicle.";
+      setTimeout(()=>{ addMessage(copy().immediateText); renderWhatsAppCard(message,true); },180);
+    }
+
+    function updateProgress(done=false) {
+      const order=["intent","name","phone","area","vehicle","budget","payment","credit","downPayment","idType","license","urgency","tradeIn","tradeVehicle","contactTime"];
+      const index=Math.max(0,order.indexOf(state.step));
+      const value=done?100:Math.max(5,Math.round(((index+1)/order.length)*100));
+      progressBar.style.width=`${value}%`;
+      progressLabel.textContent=done?copy().done:`${value}%`;
+    }
+
+    function resetChat() {
+      state.step="intent";
+      state.answers={};
+      state.complete=false;
+      chat.innerHTML="";
+      controls.innerHTML="";
+      privacy.textContent=translations[currentLang].assistantPrivacy;
+      updateProgress();
+      renderStep();
+    }
+
+    function updateStaticLinks() {
+      ["topWhatsapp","heroWhatsapp","bottomWhatsapp"].forEach(id=>{
+        const link=document.getElementById(id);
+        link.href="#leadForm";
+        link.target="_self";
+      });
+    }
+
+    function applyTranslations(lang) {
+      currentLang=lang;
+      document.documentElement.lang=lang;
+      document.querySelectorAll("[data-i18n]").forEach(el=>{ const key=el.getAttribute("data-i18n"); if (translations[lang][key]) el.textContent=translations[lang][key]; });
+      document.querySelectorAll("[data-i18n-html]").forEach(el=>{ const key=el.getAttribute("data-i18n-html"); if (translations[lang][key]) el.innerHTML=translations[lang][key]; });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{ const key=el.getAttribute("data-i18n-placeholder"); if (translations[lang][key]) el.placeholder=translations[lang][key]; });
+      updateStaticLinks();
+      document.getElementById("langEs").classList.toggle("active",lang==="es");
+      document.getElementById("langEn").classList.toggle("active",lang==="en");
+      resetChat();
+    }
+
+    document.getElementById("langEs").addEventListener("click",()=>applyTranslations("es"));
+    document.getElementById("langEn").addEventListener("click",()=>applyTranslations("en"));
+    document.getElementById("assistantReset").addEventListener("click",resetChat);
     applyTranslations("es");
   </script>
 </body>
