@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Panel · Leslie Car Miami</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">LESLIE CAR MIAMI</p>
+        <h1>Agente de prospectos</h1>
+        <p class="sub">WhatsApp automático y leads organizados en línea.</p>
+      </div>
+      <div id="status" class="status">Iniciando…</div>
+    </header>
+
+    <section id="connection" class="card connection">
+      <div>
+        <h2>Conexión de WhatsApp</h2>
+        <p id="connectionText">Preparando el código QR…</p>
+        <form id="pairingForm" class="pairing-form">
+          <label for="phoneNumber">Vincular a distancia con el número de Leslie</label>
+          <div class="pairing-row">
+            <input id="phoneNumber" name="phoneNumber" inputmode="tel" autocomplete="tel" placeholder="Ejemplo: 17864513280" required>
+            <button id="pairingButton" type="submit">Generar código</button>
+          </div>
+          <small>Incluye el código de país. Estados Unidos: 1 + número.</small>
+        </form>
+        <div id="pairingResult" class="pairing-result" hidden>
+          <span>Código de vinculación</span>
+          <strong id="pairingCode"></strong>
+          <p>En el teléfono: WhatsApp → Dispositivos vinculados → Vincular dispositivo → Vincular con número de teléfono.</p>
+        </div>
+      </div>
+      <img id="qr" alt="Código QR para conectar WhatsApp" hidden>
+    </section>
+
+    <section class="metrics">
+      <article class="card"><span>Total</span><strong id="total">0</strong></article>
+      <article class="card hot"><span>Calientes</span><strong id="hot">0</strong></article>
+      <article class="card warm"><span>Tibios</span><strong id="warm">0</strong></article>
+      <article class="card cold"><span>Fríos</span><strong id="cold">0</strong></article>
+    </section>
+
+    <section class="card leads-card">
+      <div class="section-head">
+        <div><h2>Prospectos</h2><p>Se actualiza automáticamente.</p></div>
+        <button id="refresh" type="button">Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Clasificación</th><th>Busca</th><th>Fuente</th><th>Urgencia</th><th>Contacto</th></tr></thead>
+          <tbody id="leads"><tr><td colspan="6" class="empty">Todavía no hay prospectos.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

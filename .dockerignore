@@ -1,0 +1,9 @@
+.git
+.env
+.wwebjs_auth
+.wwebjs_cache
+data
+node_modules
+release
+npm-debug.log*
+Leslie-Car-Agent-Setup.exe

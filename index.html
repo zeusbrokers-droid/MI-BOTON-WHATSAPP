@@ -286,6 +286,9 @@
 
   <script>
     const WHATSAPP_NUMBER = "17864513280";
+    const SOURCE_ALIASES = { tiktok:"TikTok", instagram:"Instagram", facebook:"Facebook", google:"Google", referido:"Referido", referral:"Referido" };
+    const sourceParam = new URLSearchParams(window.location.search).get("src") || new URLSearchParams(window.location.search).get("utm_source") || "Sitio web";
+    const LEAD_SOURCE = SOURCE_ALIASES[sourceParam.toLowerCase()] || sourceParam.slice(0, 60);
     let currentLang = "es";
     const translations = {
       es: {
@@ -560,6 +563,7 @@
         "",
         `Cliente: ${a.name||"No indicado"}`,
         `Teléfono: ${a.phone||"No indicado"}`,
+        `Fuente: ${LEAD_SOURCE}`,
         `Zona: ${a.area||"No indicado"}`,
         `Busca: ${a.vehicle||"No indicado"}`,
         `Presupuesto: ${a.budget||"No indicado"}`,
