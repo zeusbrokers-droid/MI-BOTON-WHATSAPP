@@ -26,6 +26,30 @@ function normalizeManagerNumber(value) {
   return digits ? `${digits}@c.us` : "";
 }
 
+
+// Railway keeps the profile on a volume, but each deployment has a new hostname.
+// Remove only Chromium's process markers left by a previous container.
+function clearPreviousContainerLock(authDirectory) {
+  if (!process.env.RAILWAY_ENVIRONMENT_ID) return;
+  const profile = path.join(path.resolve(authDirectory), "session");
+  let lock;
+  try {
+    lock = fs.readlinkSync(path.join(profile, "SingletonLock"));
+  } catch (error) {
+    if (error.code === "ENOENT" || error.code === "EINVAL") return;
+    throw error;
+  }
+  const ownerHost = lock.slice(0, lock.lastIndexOf("-"));
+  if (!ownerHost || ownerHost === require("node:os").hostname()) return;
+  for (const name of ["SingletonLock", "SingletonSocket", "SingletonCookie"]) {
+    try {
+      fs.unlinkSync(path.join(profile, name));
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
+  }
+}
+
 function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onState = () => {} }) {
   const state = { status: "starting", qrDataUrl: "", pairingCode: "", account: "" };
   let pairingRequested = false;
@@ -88,6 +112,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
     state,
     start: async () => {
       try {
+        clearPreviousContainerLock(authDirectory);
         return await client.initialize();
       } catch (error) {
         update({ status: "error", error: error.message, qrDataUrl: "" });
