@@ -76,6 +76,13 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
     onState({ ...state });
   };
 
+  const managerDestination = async () => {
+    if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
+    if (client.info?.wid?._serialized !== managerChatId) return managerChatId;
+    const [identity] = await client.getContactLidAndPhone(managerChatId);
+    return identity?.lid || managerChatId;
+  };
+
   client.on("qr", async qr => {
     if (pairingRequested) return;
     update({ status: "waiting_qr", qrDataUrl: await QRCode.toDataURL(qr, { width: 320, margin: 1 }) });
@@ -101,7 +108,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
         await client.sendMessage(message.from, reply);
       }
       if (result.completed && result.summary && managerChatId && managerChatId !== message.from) {
-        await client.sendMessage(managerChatId, result.summary, { sendSeen: false, waitUntilMsgSent: true });
+        await client.sendMessage(await managerDestination(), result.summary, { sendSeen: false, waitUntilMsgSent: true });
       }
     } catch (error) {
       update({ status: "error", error: error.message });
@@ -111,9 +118,8 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   return {
     state,
     sendManagerNotification: async text => {
-      if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
       if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
-      const sent = await client.sendMessage(managerChatId, String(text), { sendSeen: false, waitUntilMsgSent: true });
+      const sent = await client.sendMessage(await managerDestination(), String(text), { sendSeen: false, waitUntilMsgSent: true });
       return sent.id?._serialized || "sent";
     },
     start: async () => {
