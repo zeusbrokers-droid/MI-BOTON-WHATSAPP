@@ -57,6 +57,54 @@
         </table>
       </div>
     </section>
+
+    <section class="card content-card">
+      <div class="section-head content-head">
+        <div><p class="eyebrow">CONTENIDO GRATIS</p><h2>Preparar publicación</h2><p>Crea el paquete y Leslie decide cuándo publicarlo.</p></div>
+        <div class="publisher-links">
+          <a href="https://business.facebook.com/" target="_blank" rel="noopener">Abrir Meta Business Suite</a>
+          <a href="https://www.tiktok.com/tiktokstudio" target="_blank" rel="noopener">Abrir TikTok Studio</a>
+        </div>
+      </div>
+      <div class="content-grid">
+        <form id="contentForm" class="content-form">
+          <label>Foto o video
+            <input id="contentMedia" type="file" accept="image/*,video/mp4,video/quicktime,video/webm">
+          </label>
+          <div id="mediaPreview" class="media-preview"><span>Selecciona una foto o video.</span></div>
+          <label>Vehículo o tema
+            <input id="contentVehicle" maxlength="100" placeholder="Ejemplo: SUV familiar o Toyota Camry">
+          </label>
+          <label>Detalle principal
+            <textarea id="contentDetail" maxlength="400" rows="3" placeholder="Ejemplo: cómodo, amplio y listo para conocerlo. No inventes precio ni disponibilidad."></textarea>
+          </label>
+          <label>Llamado a la acción
+            <input id="contentCta" maxlength="180" value="Escríbenos por WhatsApp al 786-451-3280 para recibir información.">
+          </label>
+          <div class="form-actions">
+            <button id="generateContent" class="primary" type="submit">Generar publicaciones</button>
+            <button id="clearContent" type="button">Limpiar</button>
+          </div>
+          <p id="contentNotice" class="content-notice">Los textos no confirman precios, inventario, promociones ni aprobaciones.</p>
+        </form>
+        <div id="contentResults" class="content-results">
+          <article class="network-copy">
+            <div><strong>Instagram / Facebook</strong><button type="button" data-copy="instagram">Copiar texto</button></div>
+            <textarea id="instagramCopy" rows="9" readonly placeholder="Aquí aparecerá el texto para Instagram y Facebook."></textarea>
+          </article>
+          <article class="network-copy">
+            <div><strong>TikTok</strong><button type="button" data-copy="tiktok">Copiar texto</button></div>
+            <textarea id="tiktokCopy" rows="7" readonly placeholder="Aquí aparecerá el texto para TikTok."></textarea>
+          </article>
+          <div class="publish-checklist">
+            <strong>Antes de publicar</strong>
+            <label><input type="checkbox"> Leslie revisó el texto y el medio.</label>
+            <label><input type="checkbox"> No se prometen precio, disponibilidad o aprobación.</label>
+            <label><input type="checkbox"> El WhatsApp indicado es 786-451-3280.</label>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
   <script src="/app.js"></script>
 </body>
