@@ -122,6 +122,19 @@ async function startServer() {
         }
       }
       if (request.method === "GET" && url.pathname === "/api/leads") return json(response, 200, { leads: await store.list() });
+      if (request.method === "POST" && url.pathname === "/api/test-whatsapp") {
+        try {
+          const messageId = await bridge.sendManagerNotification([
+            "🧪 PRUEBA — LESLIE CAR AGENT",
+            "",
+            "El envío de fichas por WhatsApp está funcionando.",
+            "Esta no es una ficha real de cliente."
+          ].join("\\n"));
+          return json(response, 200, { ok: true, messageId });
+        } catch (error) {
+          return json(response, 503, { ok: false, error: error.message });
+        }
+      }
       if (request.method === "GET" && await serveStatic(response, url.pathname)) return;
       json(response, 404, { error: "No encontrado" });
     } catch (error) {
