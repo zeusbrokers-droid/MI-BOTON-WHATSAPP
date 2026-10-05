@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acceso · Leslie Car Miami</title>
+  <style>
+    :root{color-scheme:dark;--bg:#070b12;--card:#111827;--line:#273044;--text:#f8fafc;--muted:#93a4bb;--green:#25d366;--gold:#d3b06c}*{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;background:radial-gradient(circle at top right,#123328 0,transparent 32%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;padding:20px}.login{width:min(430px,100%);padding:28px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 24px 80px rgba(0,0,0,.32)}.eyebrow{color:var(--gold);font-weight:900;letter-spacing:2px;font-size:12px;margin:0 0 7px}h1{margin:0 0 8px;font-size:34px;letter-spacing:-1px}p{color:var(--muted);margin:0 0 22px}label{display:block;font-weight:800;margin:14px 0 0}input{display:block;width:100%;margin-top:7px;border:1px solid var(--line);border-radius:12px;background:#0b1220;color:var(--text);padding:13px 14px;font-size:16px}button{width:100%;margin-top:20px;border:0;border-radius:12px;background:var(--green);color:#06120a;font-weight:900;padding:13px 16px;font-size:16px;cursor:pointer}button:disabled{opacity:.65}.error{min-height:20px;color:#ff8a82;font-size:14px;margin:12px 0 0}.note{font-size:13px;margin-top:18px}
+  </style>
+</head>
+<body>
+  <main class="login">
+    <p class="eyebrow">LESLIE CAR MIAMI</p>
+    <h1>Acceso al panel</h1>
+    <p>La sesión permanecerá abierta durante 30 días en este dispositivo.</p>
+    <form id="loginForm">
+      <label>Usuario<input id="username" autocomplete="username" value="leslie" required></label>
+      <label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label>
+      <button id="loginButton" type="submit">Entrar</button>
+      <p id="error" class="error"></p>
+    </form>
+    <p class="note">Acceso privado para Leslie Car Miami.</p>
+  </main>
+  <script>
+    const form=document.querySelector("#loginForm"),button=document.querySelector("#loginButton"),error=document.querySelector("#error");
+    form.addEventListener("submit",async event=>{event.preventDefault();button.disabled=true;button.textContent="Entrando…";error.textContent="";try{const response=await fetch("/api/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({username:document.querySelector("#username").value,password:document.querySelector("#password").value})});const result=await response.json();if(!response.ok)throw new Error(result.error||"No se pudo iniciar sesión.");location.replace("/")}catch(problem){error.textContent=problem.message}finally{button.disabled=false;button.textContent="Entrar"}});
+  </script>
+</body>
+</html>
