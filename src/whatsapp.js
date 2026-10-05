@@ -78,7 +78,6 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
 
   const managerDestination = async () => {
     if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
-    if (client.info?.wid?._serialized !== managerChatId) return managerChatId;
     const [identity] = await client.getContactLidAndPhone(managerChatId);
     return identity?.lid || managerChatId;
   };
