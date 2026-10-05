@@ -36,6 +36,9 @@ function secureEqual(left, right) {
 function authorized(request) {
   const password = process.env.PANEL_PASSWORD || "";
   if (!password) return true;
+  const expectedSession = crypto.createHmac("sha256", password).update("leslie-panel-session-v1").digest("hex");
+  const cookies = Object.fromEntries(String(request.headers.cookie || "").split(";").map(item => item.trim().split(/=(.*)/s).slice(0, 2)).filter(([key]) => key));
+  if (cookies.leslie_session && secureEqual(cookies.leslie_session, expectedSession)) return true;
   const header = String(request.headers.authorization || "");
   if (!header.startsWith("Basic ")) return false;
   let credentials;
@@ -58,6 +61,15 @@ function requireAuthorization(response) {
     "cache-control": "no-store"
   });
   response.end(JSON.stringify({ error: "Acceso protegido" }));
+}
+
+function loginAccepted(username, password) {
+  return secureEqual(username, process.env.PANEL_USER || "leslie") && secureEqual(password, process.env.PANEL_PASSWORD || "");
+}
+
+function createSessionCookie() {
+  const token = crypto.createHmac("sha256", process.env.PANEL_PASSWORD || "").update("leslie-panel-session-v1").digest("hex");
+  return `leslie_session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`;
 }
 
 function mime(file) {
@@ -110,7 +122,26 @@ async function startServer() {
     try {
       const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
       if (request.method === "GET" && url.pathname === "/api/health") return json(response, 200, { ok: true });
-      if (!authorized(request)) return requireAuthorization(response);
+      if (request.method === "GET" && url.pathname === "/login") return await serveStatic(response, "login.html") || json(response, 404, { error: "No encontrado" });
+      if (request.method === "POST" && url.pathname === "/api/login") {
+        try {
+          const body = await readJson(request);
+          if (!loginAccepted(String(body.username || ""), String(body.password || ""))) return json(response, 401, { ok: false, error: "Usuario o contraseña incorrectos." });
+          response.writeHead(200, { "set-cookie": createSessionCookie(), "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
+          response.end(JSON.stringify({ ok: true }));
+          return;
+        } catch (error) {
+          return json(response, 400, { ok: false, error: error.message });
+        }
+      }
+      if (!authorized(request)) {
+        if (request.method === "GET" && !url.pathname.startsWith("/api/")) {
+          response.writeHead(302, { location: "/login", "cache-control": "no-store" });
+          response.end();
+          return;
+        }
+        return requireAuthorization(response);
+      }
       if (request.method === "GET" && url.pathname === "/api/status") return json(response, 200, bridge.state);
       if (request.method === "POST" && url.pathname === "/api/pairing-code") {
         try {
@@ -129,7 +160,7 @@ async function startServer() {
             "",
             "El envío de fichas por WhatsApp está funcionando.",
             "Esta no es una ficha real de cliente."
-          ].join("\\n"));
+          ].join("\n"));
           return json(response, 200, { ok: true, messageId });
         } catch (error) {
           console.error("Prueba de WhatsApp falló:", error.stack || error);
