@@ -6,6 +6,12 @@ const pairingButton=document.querySelector("#pairingButton");
 const pairingResult=document.querySelector("#pairingResult");
 const pairingCode=document.querySelector("#pairingCode");
 const leadsNode=document.querySelector("#leads");
+const contentForm=document.querySelector("#contentForm");
+const contentMedia=document.querySelector("#contentMedia");
+const mediaPreview=document.querySelector("#mediaPreview");
+const instagramCopy=document.querySelector("#instagramCopy");
+const tiktokCopy=document.querySelector("#tiktokCopy");
+const CONTENT_KEY="leslie-content-draft-v1";
 const escapeHtml=value=>String(value||"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[char]);
 
 async function loadStatus(){
@@ -49,4 +55,16 @@ async function loadLeads(){
 
 async function refresh(){try{await Promise.all([loadStatus(),loadLeads()])}catch(error){statusNode.textContent="Sin conexión"}}
 document.querySelector("#refresh").addEventListener("click",refresh);
+
+function draftValues(){return{vehicle:document.querySelector("#contentVehicle").value.trim(),detail:document.querySelector("#contentDetail").value.trim(),cta:document.querySelector("#contentCta").value.trim(),instagram:instagramCopy.value,tiktok:tiktokCopy.value}}
+function saveDraft(){localStorage.setItem(CONTENT_KEY,JSON.stringify(draftValues()))}
+function restoreDraft(){try{const draft=JSON.parse(localStorage.getItem(CONTENT_KEY)||"null");if(!draft)return;document.querySelector("#contentVehicle").value=draft.vehicle||"";document.querySelector("#contentDetail").value=draft.detail||"";document.querySelector("#contentCta").value=draft.cta||"Escríbenos por WhatsApp al 786-451-3280 para recibir información.";instagramCopy.value=draft.instagram||"";tiktokCopy.value=draft.tiktok||""}catch{localStorage.removeItem(CONTENT_KEY)}}
+function normalizedTags(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9 ]/g," ").split(/\s+/).filter(word=>word.length>2).slice(0,3).map(word=>`#${word}`).join(" ")}
+function createCopies(){const {vehicle,detail,cta}=draftValues();const subject=vehicle||"¿Buscas tu próximo auto?";const description=detail||"Te ayudamos a encontrar una opción que se ajuste a lo que necesitas.";const action=cta||"Escríbenos por WhatsApp al 786-451-3280 para recibir información.";const customTags=normalizedTags(vehicle);instagramCopy.value=[`🚗 ${subject}`,"",description,"",action,"",["#LeslieCarMiami","#AutosMiami","#MiamiCars",customTags].filter(Boolean).join(" ")].join("\n");tiktokCopy.value=[`🚗 ${subject}`,description,action,["#LeslieCarMiami","#AutosMiami",customTags].filter(Boolean).join(" ")].join("\n");saveDraft()}
+contentForm.addEventListener("submit",event=>{event.preventDefault();createCopies();document.querySelector("#contentResults").scrollIntoView({behavior:"smooth",block:"nearest"})});
+contentForm.addEventListener("input",event=>{if(event.target!==contentMedia)saveDraft()});
+contentMedia.addEventListener("change",()=>{const file=contentMedia.files?.[0];mediaPreview.innerHTML="";if(!file){mediaPreview.innerHTML="<span>Selecciona una foto o video.</span>";return}const url=URL.createObjectURL(file);const element=document.createElement(file.type.startsWith("video/")?"video":"img");element.src=url;element.alt="Vista previa del contenido";if(element.tagName==="VIDEO")element.controls=true;element.addEventListener("load",()=>URL.revokeObjectURL(url),{once:true});element.addEventListener("loadedmetadata",()=>URL.revokeObjectURL(url),{once:true});mediaPreview.appendChild(element)});
+document.querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",async()=>{const target=button.dataset.copy==="tiktok"?tiktokCopy:instagramCopy;if(!target.value)return;await navigator.clipboard.writeText(target.value);button.textContent="Copiado";button.classList.add("copied");setTimeout(()=>{button.textContent="Copiar texto";button.classList.remove("copied")},1600)}));
+document.querySelector("#clearContent").addEventListener("click",()=>{contentForm.reset();document.querySelector("#contentCta").value="Escríbenos por WhatsApp al 786-451-3280 para recibir información.";instagramCopy.value="";tiktokCopy.value="";mediaPreview.innerHTML="<span>Selecciona una foto o video.</span>";localStorage.removeItem(CONTENT_KEY)});
+restoreDraft();
 refresh();setInterval(refresh,5000);
