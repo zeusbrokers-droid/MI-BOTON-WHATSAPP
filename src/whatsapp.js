@@ -110,6 +110,12 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
 
   return {
     state,
+    sendManagerNotification: async text => {
+      if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
+      if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
+      const sent = await client.sendMessage(managerChatId, String(text));
+      return sent.id?._serialized || "sent";
+    },
     start: async () => {
       try {
         clearPreviousContainerLock(authDirectory);
