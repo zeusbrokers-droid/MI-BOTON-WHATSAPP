@@ -119,7 +119,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
     sendManagerNotification: async text => {
       if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
       const sent = await client.sendMessage(await managerDestination(), String(text), { sendSeen: false, waitUntilMsgSent: true });
-      return sent.id?._serialized || "sent";
+      return sent?.id?._serialized || "accepted";
     },
     start: async () => {
       try {
