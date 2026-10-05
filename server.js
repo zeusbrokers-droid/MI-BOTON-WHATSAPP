@@ -132,6 +132,7 @@ async function startServer() {
           ].join("\\n"));
           return json(response, 200, { ok: true, messageId });
         } catch (error) {
+          console.error("Prueba de WhatsApp falló:", error.stack || error);
           return json(response, 503, { ok: false, error: error.message });
         }
       }
