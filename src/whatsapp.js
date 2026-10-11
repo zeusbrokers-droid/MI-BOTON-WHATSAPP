@@ -160,7 +160,25 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
           console.log(`Verificación del chat falló: ${error.stack || error.message}`);
         }
       }
-      return "";
+      try {
+        const registered = await client.getNumberId(managerChatId.replace(/@.+$/, ""));
+        console.log(`Destinatario de Leslie registrado en WhatsApp: ${Boolean(registered)}.`);
+      } catch (error) { console.log(`Consulta de registro falló: ${error.message}`); }
+      try {
+        const contact = await client.getContactById(managerChatId);
+        console.log(`Contacto destinatario: ${contact.name || contact.pushname || "sin nombre"}.`);
+      } catch (error) { console.log(`Consulta de contacto falló: ${error.message}`); }
+      const cached = await client.pupPage.evaluate((ids, body, since) => {
+        const chats = window.require('WAWebCollections').Chat.getModelsArray()
+          .filter(chat => ids.includes(chat.id?._serialized));
+        for (const chat of chats) {
+          const message = chat.msgs.getModelsArray().find(m => m.id?.fromMe && m.body === body && m.t * 1000 >= Date.parse(since) - 1000);
+          if (message) return { chatCount: chats.length, messageId: message.id._serialized, ack: message.ack };
+        }
+        return { chatCount: chats.length, messageId: "" };
+      }, ids, text, since);
+      console.log(`Verificación en caché: ${cached.chatCount} chats del destinatario; ficha encontrada: ${Boolean(cached.messageId)}; ack: ${cached.ack ?? "no disponible"}.`);
+      return cached.messageId;
     },
     sendManagerNotification: async text => {
       if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
