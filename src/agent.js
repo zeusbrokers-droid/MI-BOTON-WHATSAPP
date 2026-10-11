@@ -1,5 +1,7 @@
 "use strict";
 
+const { normalizePhone, phoneFromId, leadPhone } = require("./phone");
+
 const DIRECT_HANDOFF = /\b(hablar|contactar|llamar|comunicar|leslie|persona|humano|asesor[a]?)\b/i;
 const PRICE = /\b(precio|cu[aá]nto cuesta|costo|mensualidad|pago mensual|cotizaci[oó]n)\b/i;
 const INVENTORY = /\b(disponible|disponibilidad|inventario|tienen|hay un|queda)\b/i;
@@ -7,6 +9,7 @@ const PROMOTION = /\b(promoci[oó]n|descuento|oferta|rebaja|especial)\b/i;
 const APPROVAL = /\b(aprobado|aprobar|califico|calificar|me aprueban|financiamiento espec[ií]fico)\b/i;
 
 const QUESTIONS = {
+  phone: "¿A qué número puede llamarte Leslie? Escríbelo con código de país, por ejemplo: +1 305 555 0123.",
   intent: "¡Hola! Gracias por escribir a Leslie Car Miami 🚗. ¿Buscas un auto en específico o te gustaría ver las opciones disponibles?",
   vehicle: "¿Qué marca, modelo o tipo de auto estás buscando?",
   vehicleType: "Claro 👍 ¿Prefieres SUV, sedán o pickup?",
@@ -110,7 +113,7 @@ function summary(lead) {
     "📌 NUEVO PROSPECTO",
     `Clasificación: ${c.label}`,
     `Cliente: ${lead.name || "No indicado"}`,
-    `Teléfono: ${lead.phone || "No indicado"}`,
+    `Teléfono: ${leadPhone(lead) || "Pendiente de confirmar"}`,
     `Fuente: ${lead.source || "No indicada"}`,
     `Busca: ${a.vehicle || "No indicado"}`,
     `Presupuesto: ${a.budget || "No indicado"}`,
@@ -149,7 +152,8 @@ function parseImportedLead(text, base) {
   const lead = {
     ...base,
     name: values.cliente || base.name,
-    phone: values["teléfono"] || base.phone,
+    phone: normalizePhone(values["teléfono"]) || leadPhone(base),
+    phoneSource: normalizePhone(values["teléfono"]) ? "client" : base.phoneSource,
     source: values.fuente || sourceFrom(text, base.source),
     answers,
     step: "complete",
@@ -170,10 +174,11 @@ function createAgent({ loadLead, saveLead }) {
     if (!message) return { replies: [] };
 
     const existing = await loadLead(chatId);
-    const base = existing || {
+    const base = existing ? { ...existing, answers: { ...existing.answers } } : {
       id: chatId,
       name: clean(profileName),
-      phone: clean(phone) || clean(chatId).replace(/@.+$/, ""),
+      phone: normalizePhone(phone) || phoneFromId(chatId),
+      phoneSource: "whatsapp",
       source: sourceFrom(message, source || "WhatsApp directo"),
       answers: {},
       step: "intent",
@@ -181,21 +186,49 @@ function createAgent({ loadLead, saveLead }) {
       createdAt: new Date().toISOString()
     };
 
-    const imported = parseImportedLead(message, base);
+    const previousPhone = existing ? leadPhone(existing) : "";
+    base.phone = leadPhone(base);
+    const resolvedPhone = leadPhone({ id: chatId, phone }) || phoneFromId(chatId);
+    if (resolvedPhone && (base.phoneSource !== "client" || !base.phone)) {
+      base.phone = resolvedPhone;
+      base.phoneSource = "whatsapp";
+    }
+    if (existing && base.phone !== existing.phone) await saveLead(base);
+
+    const finish = async (lead, reply) => {
+      lead.updatedAt = new Date().toISOString();
+      lead.classification = classification(lead.answers);
+      if (!leadPhone(lead)) {
+        lead.phone = "";
+        lead.step = "phone";
+        lead.status = "awaiting_phone";
+        await saveLead(lead);
+        return { replies: [QUESTIONS.phone], lead, completed: false };
+      }
+      lead.step = "complete";
+      lead.status = "qualified";
+      await saveLead(lead);
+      return { replies: [reply], lead, completed: true, summary: summary(lead) };
+    };
+
+    const imported = parseImportedLead(text, base);
     if (imported) {
-      await saveLead(imported);
-      return {
-        replies: ["¡Perfecto! Recibimos tu información 👍 Leslie podrá revisarla y contactarte en el horario indicado."],
-        lead: imported,
-        completed: true,
-        summary: summary(imported)
-      };
+      return finish(imported, "¡Perfecto! Recibimos tu información 👍 Leslie podrá revisarla y contactarte en el horario indicado.");
     }
 
     if (/^(reiniciar|empezar de nuevo|restart)$/i.test(message)) {
       const restarted = { ...base, answers: {}, step: "intent", status: "new", updatedAt: new Date().toISOString() };
       await saveLead(restarted);
       return { replies: [QUESTIONS.intent], lead: restarted };
+    }
+
+    if (base.step === "phone" || (base.status === "qualified" && !previousPhone)) {
+      const suppliedPhone = normalizePhone(message);
+      if (suppliedPhone) {
+        base.phone = suppliedPhone;
+        base.phoneSource = "client";
+      }
+      return finish(base, "Perfecto 👍 Le paso la información a Leslie para que pueda contactarte.");
     }
 
     if (base.status === "qualified" || base.status === "handoff") {
@@ -317,6 +350,7 @@ function createAgent({ loadLead, saveLead }) {
         reply = QUESTIONS.intent;
     }
 
+    if (lead.status === "qualified") return finish(lead, reply);
     await saveLead(lead);
     const completed = lead.status === "qualified";
     return {

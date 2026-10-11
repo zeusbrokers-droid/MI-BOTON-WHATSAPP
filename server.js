@@ -115,7 +115,10 @@ async function startServer() {
     : createWhatsAppBridge({
         agent,
         authDirectory: path.join(dataRoot, "whatsapp-session"),
-        managerNumber: process.env.MANAGER_WHATSAPP_NUMBER || ""
+        managerNumber: process.env.MANAGER_WHATSAPP_NUMBER || "",
+        listLeads: () => store.list(),
+        loadLead: id => store.get(id),
+        saveLead: lead => store.save(lead)
       });
 
   const server = http.createServer(async (request, response) => {

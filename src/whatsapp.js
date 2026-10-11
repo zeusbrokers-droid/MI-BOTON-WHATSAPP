@@ -3,6 +3,7 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const QRCode = require("qrcode");
+const { resolveContactPhone, leadPhone } = require("./phone");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 
 function findChromeExecutable() {
@@ -50,7 +51,7 @@ function clearPreviousContainerLock(authDirectory) {
   }
 }
 
-function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onState = () => {} }) {
+function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onState = () => {}, listLeads = async () => [], loadLead = async () => null, saveLead = async () => {} }) {
   const state = { status: "starting", qrDataUrl: "", pairingCode: "", account: "" };
   let pairingRequested = false;
   const managerChatId = normalizeManagerNumber(managerNumber);
@@ -78,7 +79,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
 
   const managerDestination = async () => {
     if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
-    const [identity] = await client.getContactLidAndPhone(managerChatId);
+    const [identity] = await client.getContactLidAndPhone([managerChatId]);
     return identity?.lid || managerChatId;
   };
 
@@ -88,7 +89,27 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   });
   client.on("code", code => update({ status: "waiting_code", pairingCode: String(code), qrDataUrl: "", error: "" }));
   client.on("authenticated", () => update({ status: "authenticated", qrDataUrl: "", pairingCode: "" }));
-  client.on("ready", () => update({ status: "ready", qrDataUrl: "", pairingCode: "", account: client.info?.wid?._serialized || "" }));
+  client.on("ready", async () => {
+    update({ status: "ready", qrDataUrl: "", pairingCode: "", account: client.info?.wid?._serialized || "" });
+    console.log("WhatsApp conectado; verificando teléfonos guardados.");
+    try {
+      let recovered = 0;
+      let pending = 0;
+      for (const lead of await listLeads()) {
+        if (leadPhone(lead)) continue;
+        const phone = await resolveContactPhone(client, lead.id);
+        const current = await loadLead(lead.id) || lead;
+        if (!leadPhone(current)) {
+          await saveLead({ ...current, phone, phoneSource: "whatsapp" });
+          if (phone) recovered += 1;
+          else pending += 1;
+        }
+      }
+      console.log(`Teléfonos guardados: ${recovered} recuperados; ${pending} pendientes de confirmar.`);
+    } catch {
+      console.warn("No se pudo completar la recuperación de teléfonos guardados.");
+    }
+  });
   client.on("auth_failure", message => update({ status: "auth_failure", error: String(message) }));
   client.on("disconnected", reason => update({ status: "disconnected", error: String(reason) }));
 
@@ -100,7 +121,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
         chatId: message.from,
         text: message.body,
         profileName: contact.pushname || contact.name || "",
-        phone: contact.number || ""
+        phone: await resolveContactPhone(client, message.from, contact)
       });
       for (const reply of result.replies || []) {
         await new Promise(resolve => setTimeout(resolve, 650));

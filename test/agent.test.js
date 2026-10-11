@@ -66,7 +66,7 @@ test("no promete aprobación", async () => {
 
 test("una pregunta de precio se deriva correctamente a horario", async () => {
   const { agent }=memoryAgent();
-  const id="5@c.us";
+  const id="13055550105@c.us";
   const first=await agent.handle({chatId:id,text:"¿Cuál es el precio final?",profileName:"Luis"});
   assert.match(first.replies[0],/Leslie te puede confirmar/i);
   assert.equal(first.lead.step,"contactTime");
@@ -78,7 +78,7 @@ test("una pregunta de precio se deriva correctamente a horario", async () => {
 
 test("vuelve a pedir una hora inválida y luego cierra sin inventarla", async () => {
   const { agent }=memoryAgent();
-  const id="6@c.us";
+  const id="13055550106@c.us";
   await agent.handle({chatId:id,text:"¿Cuál es el precio final?",profileName:"Luis"});
   const retry=await agent.handle({chatId:id,text:"ok"});
   assert.equal(retry.completed,false);
