@@ -51,7 +51,7 @@ function clearPreviousContainerLock(authDirectory) {
   }
 }
 
-function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onState = () => {}, listLeads = async () => [], loadLead = async () => null, saveLead = async () => {} }) {
+function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onState = () => {}, onReady = async () => {}, listLeads = async () => [], loadLead = async () => null, saveLead = async () => {} }) {
   const state = { status: "starting", qrDataUrl: "", pairingCode: "", account: "" };
   let pairingRequested = false;
   const managerChatId = normalizeManagerNumber(managerNumber);
@@ -108,6 +108,11 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
       console.log(`Teléfonos guardados: ${recovered} recuperados; ${pending} pendientes de confirmar.`);
     } catch {
       console.warn("No se pudo completar la recuperación de teléfonos guardados.");
+    }
+    try {
+      await onReady();
+    } catch (error) {
+      console.error("Envío solicitado de fichas calientes:", error.message);
     }
   });
   client.on("auth_failure", message => update({ status: "auth_failure", error: String(message) }));

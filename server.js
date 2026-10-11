@@ -5,6 +5,7 @@ const crypto = require("node:crypto");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const { URL } = require("node:url");
+const { resendHotLeads } = require("./src/resend-hot");
 const { LeadStore } = require("./src/store");
 const { createAgent } = require("./src/agent");
 const { createWhatsAppBridge } = require("./src/whatsapp");
@@ -118,7 +119,12 @@ async function startServer() {
         managerNumber: process.env.MANAGER_WHATSAPP_NUMBER || "",
         listLeads: () => store.list(),
         loadLead: id => store.get(id),
-        saveLead: lead => store.save(lead)
+        saveLead: lead => store.save(lead),
+        onReady: () => resendHotLeads({
+          directory: path.join(dataRoot, "operations"),
+          listLeads: () => store.list(),
+          send: text => bridge.sendManagerNotification(text)
+        })
       });
 
   const server = http.createServer(async (request, response) => {
