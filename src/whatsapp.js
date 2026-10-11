@@ -143,12 +143,24 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   return {
     state,
     findManagerNotification: async (text, since) => {
-      const chat = await client.getChatById(await managerDestination());
-      console.log(`Verificación de envío: chat configurado de Leslie (${chat.name || "sin nombre"}).`);
-      const messages = await chat.fetchMessages({ limit: 30, fromMe: true });
-      const match = messages.find(message => message.fromMe && message.body === text
-        && message.timestamp * 1000 >= Date.parse(since) - 1000);
-      return match?.id?._serialized || "";
+      console.log(`Destinatario configurado para Leslie: ${managerChatId}; cuenta del agente: ${client.info?.wid?._serialized || "desconocida"}.`);
+      const destination = await managerDestination();
+      const ids = [...new Set([managerChatId, destination])];
+      for (const id of ids) {
+        try {
+          const chat = await client.getChatById(id);
+          if (!chat) { console.log("Verificación: destino sin chat disponible."); continue; }
+          console.log(`Verificación: chat configurado de Leslie (${chat.name || "sin nombre"}).`);
+          const messages = await chat.fetchMessages({ limit: 30, fromMe: true });
+          const match = messages.find(message => message.fromMe && message.body === text
+            && message.timestamp * 1000 >= Date.parse(since) - 1000);
+          if (match?.id?._serialized) return match.id._serialized;
+          console.log(`Verificación: ${messages.length} mensajes revisados; ficha actualizada no encontrada.`);
+        } catch (error) {
+          console.log(`Verificación del chat falló: ${error.stack || error.message}`);
+        }
+      }
+      return "";
     },
     sendManagerNotification: async text => {
       if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
