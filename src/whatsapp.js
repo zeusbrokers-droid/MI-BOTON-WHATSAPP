@@ -142,6 +142,14 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
 
   return {
     state,
+    findManagerNotification: async (text, since) => {
+      const chat = await client.getChatById(await managerDestination());
+      console.log(`Verificación de envío: chat configurado de Leslie (${chat.name || "sin nombre"}).`);
+      const messages = await chat.fetchMessages({ limit: 30, fromMe: true });
+      const match = messages.find(message => message.fromMe && message.body === text
+        && message.timestamp * 1000 >= Date.parse(since) - 1000);
+      return match?.id?._serialized || "";
+    },
     sendManagerNotification: async text => {
       if (state.status !== "ready") throw new Error("WhatsApp no está conectado.");
       const sent = await client.sendMessage(await managerDestination(), String(text), { sendSeen: false, waitUntilMsgSent: true });

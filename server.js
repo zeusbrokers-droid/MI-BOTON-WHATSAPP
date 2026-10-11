@@ -123,7 +123,8 @@ async function startServer() {
         onReady: () => resendHotLeads({
           directory: path.join(dataRoot, "operations"),
           listLeads: () => store.list(),
-          send: text => bridge.sendManagerNotification(text)
+          send: text => bridge.sendManagerNotification(text),
+          verify: (text, since) => bridge.findManagerNotification(text, since)
         })
       });
 

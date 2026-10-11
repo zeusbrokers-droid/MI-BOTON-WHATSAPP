@@ -9,7 +9,7 @@ const { leadPhone } = require("./phone");
 // from expanding the audience or repeating a message with an uncertain outcome.
 const OPERATION = "leslie-hot-2026-10-11-181651";
 
-async function resendHotLeads({ directory, listLeads, send, log = console.log }) {
+async function resendHotLeads({ directory, listLeads, send, verify = async () => "", log = console.log }) {
   await fs.mkdir(directory, { recursive: true });
   const file = path.join(directory, `${OPERATION}.json`);
   let operation;
@@ -42,6 +42,17 @@ async function resendHotLeads({ directory, listLeads, send, log = console.log })
   await persist();
   log(`${OPERATION}: ${operation.entries.length} fichas calientes; ${operation.skippedWithoutPhone} sin teléfono.`);
   for (const entry of operation.entries) {
+    if (["sending", "uncertain"].includes(entry.status)) {
+      const messageId = await verify(entry.body, operation.createdAt);
+      if (messageId) {
+        entry.status = "sent";
+        entry.messageId = messageId;
+        entry.verifiedAt = new Date().toISOString();
+        await persist();
+        log(`${OPERATION}: ficha verificada en el chat: ${entry.name}.`);
+      }
+      continue;
+    }
     if (entry.status !== "pending") continue;
     entry.status = "sending";
     await persist();

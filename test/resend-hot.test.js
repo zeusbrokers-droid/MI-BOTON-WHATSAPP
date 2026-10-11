@@ -47,4 +47,12 @@ test("una entrega incierta no se repite automáticamente", async t => {
   assert.equal(calls, 1);
   assert.equal(result.entries[0].status, "uncertain");
   assert.equal(result.completedAt, undefined);
+  options.verify = async body => {
+    assert.match(body, /Cliente: Misael/);
+    return "verified-message";
+  };
+  const verified = await resendHotLeads(options);
+  assert.equal(calls, 1);
+  assert.equal(verified.entries[0].messageId, "verified-message");
+  assert.ok(verified.completedAt);
 });
