@@ -173,7 +173,11 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
           .filter(chat => ids.includes(chat.id?._serialized));
         for (const chat of chats) {
           const message = chat.msgs.getModelsArray().find(m => m.id?.fromMe && m.body === body && m.t * 1000 >= Date.parse(since) - 1000);
-          if (message) return { chatCount: chats.length, messageId: message.id._serialized, ack: message.ack };
+          if (message) {
+            const serialized = message.id._serialized || String(message.id);
+            const messageId = serialized && serialized !== "[object Object]" ? serialized : `history:${message.t}:ack:${message.ack}`;
+            return { chatCount: chats.length, messageId: message.ack >= 1 ? messageId : "", ack: message.ack };
+          }
         }
         return { chatCount: chats.length, messageId: "" };
       }, ids, text, since);

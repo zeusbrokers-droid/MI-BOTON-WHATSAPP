@@ -120,12 +120,12 @@ async function startServer() {
         listLeads: () => store.list(),
         loadLead: id => store.get(id),
         saveLead: lead => store.save(lead),
-        onReady: () => resendHotLeads({
+        onReady: () => process.env.RAILWAY_SERVICE_ID === "4a2be2df-9f38-41bf-a781-90d1645969bb" ? resendHotLeads({
           directory: path.join(dataRoot, "operations"),
           listLeads: () => store.list(),
           send: text => bridge.sendManagerNotification(text),
           verify: (text, since) => bridge.findManagerNotification(text, since)
-        })
+        }) : undefined
       });
 
   const server = http.createServer(async (request, response) => {

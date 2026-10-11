@@ -17,6 +17,10 @@ async function resendHotLeads({ directory, listLeads, send, verify = async () =>
     operation = JSON.parse(await fs.readFile(file, "utf8"));
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
+    if (Date.now() > Date.parse("2026-10-12T18:16:51Z")) {
+      log(`${OPERATION}: solicitud puntual vencida; no se crea otro envío.`);
+      return { id: OPERATION, entries: [] };
+    }
     const leads = await listLeads();
     const hot = leads.filter(lead => ["qualified", "handoff"].includes(lead.status)
       && classification(lead.answers || {}).code === "hot"
