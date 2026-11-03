@@ -37,9 +37,9 @@ function secureEqual(left, right) {
 function authorized(request) {
   const password = process.env.PANEL_PASSWORD || "";
   if (!password) return true;
-  const expectedSession = crypto.createHmac("sha256", password).update("leslie-panel-session-v1").digest("hex");
+  const expectedSession = crypto.createHmac("sha256", password).update("osorio-panel-session-v1").digest("hex");
   const cookies = Object.fromEntries(String(request.headers.cookie || "").split(";").map(item => item.trim().split(/=(.*)/s).slice(0, 2)).filter(([key]) => key));
-  if (cookies.leslie_session && secureEqual(cookies.leslie_session, expectedSession)) return true;
+  if (cookies.osorio_session && secureEqual(cookies.osorio_session, expectedSession)) return true;
   const header = String(request.headers.authorization || "");
   if (!header.startsWith("Basic ")) return false;
   let credentials;
@@ -52,12 +52,12 @@ function authorized(request) {
   if (separator < 0) return false;
   const username = credentials.slice(0, separator);
   const suppliedPassword = credentials.slice(separator + 1);
-  return secureEqual(username, process.env.PANEL_USER || "leslie") && secureEqual(suppliedPassword, password);
+  return secureEqual(username, process.env.PANEL_USER || "osorio") && secureEqual(suppliedPassword, password);
 }
 
 function requireAuthorization(response) {
   response.writeHead(401, {
-    "www-authenticate": 'Basic realm="Leslie Car Miami", charset="UTF-8"',
+    "www-authenticate": 'Basic realm="OSORIO CIGAR'S", charset="UTF-8"',
     "content-type": "application/json; charset=utf-8",
     "cache-control": "no-store"
   });
@@ -65,12 +65,12 @@ function requireAuthorization(response) {
 }
 
 function loginAccepted(username, password) {
-  return secureEqual(username, process.env.PANEL_USER || "leslie") && secureEqual(password, process.env.PANEL_PASSWORD || "");
+  return secureEqual(username, process.env.PANEL_USER || "osorio") && secureEqual(password, process.env.PANEL_PASSWORD || "");
 }
 
 function createSessionCookie() {
-  const token = crypto.createHmac("sha256", process.env.PANEL_PASSWORD || "").update("leslie-panel-session-v1").digest("hex");
-  return `leslie_session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`;
+  const token = crypto.createHmac("sha256", process.env.PANEL_PASSWORD || "").update("osorio-panel-session-v1").digest("hex");
+  return `osorio_session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`;
 }
 
 function mime(file) {
@@ -107,7 +107,7 @@ async function startServer() {
   if (process.env.RAILWAY_ENVIRONMENT_ID && (!process.env.PANEL_PASSWORD || process.env.PANEL_PASSWORD.length < 16)) {
     throw new Error("Railway requiere PANEL_PASSWORD de al menos 16 caracteres.");
   }
-  const dataRoot = process.env.LESLIE_DATA_DIR || path.join(ROOT, "data");
+  const dataRoot = process.env.OSORIO_DATA_DIR || path.join(ROOT, "data");
   const store = new LeadStore(path.join(dataRoot, "records"));
   await store.init();
   const agent = createAgent({ loadLead: id => store.get(id), saveLead: lead => store.save(lead) });
@@ -189,7 +189,7 @@ async function startServer() {
     server.listen(PORT, "0.0.0.0", resolve);
   });
   const url = `http://127.0.0.1:${PORT}`;
-  console.log(`Panel Leslie Car: ${url}`);
+  console.log(`Panel Osorio Car: ${url}`);
 
   bridge.start().catch(error => console.error("No se pudo iniciar WhatsApp:", error));
   const stop = async () => {
