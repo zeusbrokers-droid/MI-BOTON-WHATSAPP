@@ -78,7 +78,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   };
 
   const managerDestination = async () => {
-    if (!managerChatId) throw new Error("No hay un WhatsApp de Leslie configurado.");
+    if (!managerChatId) throw new Error("No hay un WhatsApp de Osorio configurado.");
     const [identity] = await client.getContactLidAndPhone([managerChatId]);
     return identity?.lid || managerChatId;
   };
@@ -143,14 +143,14 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   return {
     state,
     findManagerNotification: async (text, since) => {
-      console.log(`Destinatario configurado para Leslie: ${managerChatId}; cuenta del agente: ${client.info?.wid?._serialized || "desconocida"}.`);
+      console.log(`Destinatario configurado para Osorio: ${managerChatId}; cuenta del agente: ${client.info?.wid?._serialized || "desconocida"}.`);
       const destination = await managerDestination();
       const ids = [...new Set([managerChatId, destination])];
       for (const id of ids) {
         try {
           const chat = await client.getChatById(id);
           if (!chat) { console.log("Verificación: destino sin chat disponible."); continue; }
-          console.log(`Verificación: chat configurado de Leslie (${chat.name || "sin nombre"}).`);
+          console.log(`Verificación: chat configurado de Osorio (${chat.name || "sin nombre"}).`);
           const messages = await chat.fetchMessages({ limit: 30, fromMe: true });
           const match = messages.find(message => message.fromMe && message.body === text
             && message.timestamp * 1000 >= Date.parse(since) - 1000);
@@ -162,7 +162,7 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
       }
       try {
         const registered = await client.getNumberId(managerChatId.replace(/@.+$/, ""));
-        console.log(`Destinatario de Leslie registrado en WhatsApp: ${Boolean(registered)}.`);
+        console.log(`Destinatario de Osorio registrado en WhatsApp: ${Boolean(registered)}.`);
       } catch (error) { console.log(`Consulta de registro falló: ${error.message}`); }
       try {
         const contact = await client.getContactById(managerChatId);
