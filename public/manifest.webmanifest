@@ -1,0 +1,13 @@
+{
+  "name": "Panel OSORIO CIGAR'S",
+  "short_name": "Osorio Panel",
+  "description": "Panel privado de prospectos y conversaciones de WhatsApp de OSORIO CIGAR'S.",
+  "start_url": "/login",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070b12",
+  "theme_color": "#070b12",
+  "icons": [
+    { "src": "/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

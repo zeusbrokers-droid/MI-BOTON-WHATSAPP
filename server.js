@@ -74,7 +74,7 @@ function createSessionCookie() {
 }
 
 function mime(file) {
-  return ({ ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8" })[path.extname(file)] || "application/octet-stream";
+  return ({ ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".webmanifest": "application/manifest+json; charset=utf-8", ".svg": "image/svg+xml" })[path.extname(file)] || "application/octet-stream";
 }
 
 async function readJson(request) {

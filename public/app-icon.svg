@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#070b12"/>
+  <circle cx="256" cy="220" r="142" fill="none" stroke="#d3b06c" stroke-width="18"/>
+  <path d="M158 102h196l-24-46-42 35-32-56-32 56-42-35z" fill="#d3b06c"/>
+  <text x="256" y="292" text-anchor="middle" font-family="Georgia,serif" font-size="210" font-weight="700" fill="#d3b06c">O</text>
+  <text x="256" y="430" text-anchor="middle" font-family="Arial,sans-serif" font-size="42" font-weight="700" letter-spacing="12" fill="#f8fafc">OSORIO</text>
+</svg>

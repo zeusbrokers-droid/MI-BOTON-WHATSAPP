@@ -3,7 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#070b12">
   <title>Agente WhatsApp · OSORIO CIGAR'S</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/app-icon.svg">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -14,7 +18,10 @@
         <h1>Agente de WhatsApp</h1>
         <p class="sub">Respuestas automáticas, verificación 21+ y prospectos organizados.</p>
       </div>
-      <div id="status" class="status">Iniciando…</div>
+      <div class="header-actions">
+        <button id="installPanel" class="install-button" type="button">Instalar panel</button>
+        <div id="status" class="status">Iniciando…</div>
+      </div>
     </header>
 
     <section id="connection" class="card connection">
@@ -55,6 +62,16 @@
           <thead><tr><th>Cliente</th><th>Clasificación</th><th>Busca</th><th>Cantidad</th><th>Ubicación</th><th>Contacto</th></tr></thead>
           <tbody id="leads"><tr><td colspan="6" class="empty">Todavía no hay prospectos.</td></tr></tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="card conversations-card">
+      <div class="section-head">
+        <div><h2>Conversaciones de WhatsApp</h2><p>Historial completo del cliente y del agente.</p></div>
+      </div>
+      <div class="conversation-layout">
+        <div id="conversationList" class="conversation-list"><p class="empty">Todavía no hay conversaciones.</p></div>
+        <div id="conversationThread" class="conversation-thread"><p class="empty">Selecciona un cliente para ver su conversación.</p></div>
       </div>
     </section>
   </main>

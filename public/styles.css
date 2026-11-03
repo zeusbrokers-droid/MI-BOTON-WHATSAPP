@@ -3,6 +3,8 @@
 body{margin:0;background:radial-gradient(circle at top right,#123328 0,transparent 28%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
 .shell{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:34px 0 60px}
 header,.section-head,.connection{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.header-actions{display:flex;align-items:center;gap:10px}
+.install-button{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:10px 14px;border-radius:999px;font-weight:900;cursor:pointer}
 h1{font-size:clamp(34px,6vw,58px);margin:4px 0 8px;letter-spacing:-2px}
 h2{margin:0 0 8px}
 .sub,.card p{color:var(--muted);margin:0}
@@ -38,10 +40,29 @@ th,td{padding:15px 18px;border-top:1px solid var(--line);text-align:left;font-si
 th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.6px}
 .badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:#1b2435;font-weight:800;white-space:nowrap}
 .empty{text-align:center;color:var(--muted);padding:32px}
+.conversations-card{margin-top:12px;padding:0;overflow:hidden}
+.conversation-layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:520px;border-top:1px solid var(--line)}
+.conversation-list{border-right:1px solid var(--line);overflow:auto;max-height:620px}
+.conversation-contact{display:block;width:100%;padding:15px 17px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer}
+.conversation-contact:hover,.conversation-contact.active{background:#182132}
+.conversation-contact strong,.conversation-contact span,.conversation-contact small{display:block}
+.conversation-contact span,.conversation-contact small{color:var(--muted);margin-top:4px}
+.conversation-thread{min-width:0;background:#0b1220}
+.thread-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:#111827}
+.thread-head strong,.thread-head span{display:block}
+.thread-head>div>span{color:var(--muted);margin-top:3px;font-size:13px}
+.messages{height:480px;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.message{max-width:min(78%,560px);padding:10px 12px;border-radius:14px;background:#1b2435;align-self:flex-start;box-shadow:0 6px 18px rgba(0,0,0,.16)}
+.message.outbound{align-self:flex-end;background:#123421;border:1px solid #257e47}
+.message small,.message time{display:block;color:var(--muted);font-size:10px}
+.message p{margin:5px 0;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
+.message time{text-align:right}
 @media(max-width:760px){header,.connection{align-items:flex-start;flex-direction:column}
 .metrics{grid-template-columns:1fr 1fr}
 .connection img{align-self:center}
 .pairing-row{flex-direction:column}
+.header-actions{width:100%;justify-content:space-between}
+.conversation-layout{grid-template-columns:1fr;min-height:0}.conversation-list{display:flex;max-height:none;border-right:0;border-bottom:1px solid var(--line);overflow:auto}.conversation-contact{min-width:210px;border-right:1px solid var(--line)}.messages{height:430px}.message{max-width:88%}
 }
 .content-card{margin-top:12px;padding:0;overflow:hidden}
 .content-head{border-bottom:1px solid var(--line)}

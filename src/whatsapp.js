@@ -27,6 +27,24 @@ function normalizeManagerNumber(value) {
   return digits ? `${digits}@c.us` : "";
 }
 
+function mergeConversation(lead, entries) {
+  const current = Array.isArray(lead.conversation) ? lead.conversation : [];
+  const seen = new Set(current.map(entry => entry.id).filter(Boolean));
+  const additions = entries.filter(entry => {
+    if (!entry?.text || (entry.id && seen.has(entry.id))) return false;
+    if (entry.id) seen.add(entry.id);
+    return true;
+  });
+  const conversation = [...current, ...additions]
+    .sort((left, right) => String(left.timestamp).localeCompare(String(right.timestamp)))
+    .slice(-500);
+  return {
+    ...lead,
+    conversation,
+    lastMessageAt: conversation.at(-1)?.timestamp || lead.lastMessageAt || lead.updatedAt
+  };
+}
+
 
 // Railway keeps the profile on a volume, but each deployment has a new hostname.
 // Remove only Chromium's process markers left by a previous container.
@@ -83,6 +101,12 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
     return identity?.lid || managerChatId;
   };
 
+  const appendConversation = async (chatId, entries) => {
+    const current = await loadLead(chatId);
+    if (!current) return;
+    await saveLead(mergeConversation(current, entries));
+  };
+
   client.on("qr", async qr => {
     if (pairingRequested) return;
     update({ status: "waiting_qr", qrDataUrl: await QRCode.toDataURL(qr, { width: 320, margin: 1 }) });
@@ -128,9 +152,23 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
         profileName: contact.pushname || contact.name || "",
         phone: await resolveContactPhone(client, message.from, contact)
       });
+      await appendConversation(message.from, [{
+        id: message.id?._serialized || `in:${message.from}:${message.timestamp || Date.now()}`,
+        direction: "inbound",
+        author: contact.pushname || contact.name || "Cliente",
+        text: message.body,
+        timestamp: message.timestamp ? new Date(message.timestamp * 1000).toISOString() : new Date().toISOString()
+      }]);
       for (const reply of result.replies || []) {
         await new Promise(resolve => setTimeout(resolve, 650));
-        await client.sendMessage(message.from, reply);
+        const sent = await client.sendMessage(message.from, reply);
+        await appendConversation(message.from, [{
+          id: sent?.id?._serialized || `out:${message.from}:${Date.now()}`,
+          direction: "outbound",
+          author: "Agente Osorio",
+          text: reply,
+          timestamp: new Date().toISOString()
+        }]);
       }
       if (result.completed && result.summary && managerChatId && managerChatId !== message.from) {
         await client.sendMessage(await managerDestination(), result.summary, { sendSeen: false, waitUntilMsgSent: true });
@@ -219,4 +257,4 @@ function createWhatsAppBridge({ agent, authDirectory, managerNumber = "", onStat
   };
 }
 
-module.exports = { createWhatsAppBridge, normalizeManagerNumber, findChromeExecutable };
+module.exports = { createWhatsAppBridge, normalizeManagerNumber, findChromeExecutable, mergeConversation };
