@@ -57,7 +57,7 @@ function authorized(request) {
 
 function requireAuthorization(response) {
   response.writeHead(401, {
-    "www-authenticate": 'Basic realm="OSORIO CIGAR'S", charset="UTF-8"',
+    "www-authenticate": 'Basic realm="OSORIO CIGARS", charset="UTF-8"',
     "content-type": "application/json; charset=utf-8",
     "cache-control": "no-store"
   });
