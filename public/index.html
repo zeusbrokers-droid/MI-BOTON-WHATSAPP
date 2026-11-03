@@ -3,39 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Panel · Leslie Car Miami</title>
+  <title>Agente WhatsApp · OSORIO CIGAR'S</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="shell">
     <header>
       <div>
-        <p class="eyebrow">LESLIE CAR MIAMI</p>
-        <h1>Agente de prospectos</h1>
-        <p class="sub">WhatsApp automático y leads organizados en línea.</p>
+        <p class="eyebrow">OSORIO CIGAR'S · MIAMI</p>
+        <h1>Agente de WhatsApp</h1>
+        <p class="sub">Respuestas automáticas, verificación 21+ y prospectos organizados.</p>
       </div>
       <div id="status" class="status">Iniciando…</div>
     </header>
 
     <section id="connection" class="card connection">
       <div>
-        <h2>Conexión de WhatsApp</h2>
-        <p id="connectionText">Preparando el código QR…</p>
+        <h2>Conexión de WhatsApp Business</h2>
+        <p id="connectionText">Preparando la conexión…</p>
         <form id="pairingForm" class="pairing-form">
-          <label for="phoneNumber">Vincular a distancia con el número de Leslie</label>
+          <label for="phoneNumber">Número de WhatsApp Business de Osorio</label>
           <div class="pairing-row">
-            <input id="phoneNumber" name="phoneNumber" inputmode="tel" autocomplete="tel" placeholder="Ejemplo: 17864513280" required>
+            <input id="phoneNumber" inputmode="tel" autocomplete="tel" value="17865470805" required>
             <button id="pairingButton" type="submit">Generar código</button>
           </div>
-          <small>Incluye el código de país. Estados Unidos: 1 + número.</small>
+          <small>En el teléfono: WhatsApp Business → Dispositivos vinculados → Vincular dispositivo → Vincular con número.</small>
         </form>
         <div id="pairingResult" class="pairing-result" hidden>
           <span>Código de vinculación</span>
           <strong id="pairingCode"></strong>
-          <p>En el teléfono: WhatsApp → Dispositivos vinculados → Vincular dispositivo → Vincular con número de teléfono.</p>
+          <p>Introduce este código en WhatsApp Business desde el teléfono de Osorio.</p>
         </div>
       </div>
-      <img id="qr" alt="Código QR para conectar WhatsApp" hidden>
+      <img id="qr" alt="Código QR para conectar WhatsApp Business" hidden>
     </section>
 
     <section class="metrics">
@@ -52,57 +52,9 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Cliente</th><th>Clasificación</th><th>Busca</th><th>Fuente</th><th>Urgencia</th><th>Contacto</th></tr></thead>
+          <thead><tr><th>Cliente</th><th>Clasificación</th><th>Busca</th><th>Cantidad</th><th>Ubicación</th><th>Contacto</th></tr></thead>
           <tbody id="leads"><tr><td colspan="6" class="empty">Todavía no hay prospectos.</td></tr></tbody>
         </table>
-      </div>
-    </section>
-
-    <section class="card content-card">
-      <div class="section-head content-head">
-        <div><p class="eyebrow">CONTENIDO GRATIS</p><h2>Preparar publicación</h2><p>Crea el paquete y Leslie decide cuándo publicarlo.</p></div>
-        <div class="publisher-links">
-          <a href="https://business.facebook.com/" target="_blank" rel="noopener">Abrir Meta Business Suite</a>
-          <a href="https://www.tiktok.com/tiktokstudio" target="_blank" rel="noopener">Abrir TikTok Studio</a>
-        </div>
-      </div>
-      <div class="content-grid">
-        <form id="contentForm" class="content-form">
-          <label>Foto o video
-            <input id="contentMedia" type="file" accept="image/*,video/mp4,video/quicktime,video/webm">
-          </label>
-          <div id="mediaPreview" class="media-preview"><span>Selecciona una foto o video.</span></div>
-          <label>Vehículo o tema
-            <input id="contentVehicle" maxlength="100" placeholder="Ejemplo: SUV familiar o Toyota Camry">
-          </label>
-          <label>Detalle principal
-            <textarea id="contentDetail" maxlength="400" rows="3" placeholder="Ejemplo: cómodo, amplio y listo para conocerlo. No inventes precio ni disponibilidad."></textarea>
-          </label>
-          <label>Llamado a la acción
-            <input id="contentCta" maxlength="180" value="Escríbenos por WhatsApp al 786-451-3280 para recibir información.">
-          </label>
-          <div class="form-actions">
-            <button id="generateContent" class="primary" type="submit">Generar publicaciones</button>
-            <button id="clearContent" type="button">Limpiar</button>
-          </div>
-          <p id="contentNotice" class="content-notice">Los textos no confirman precios, inventario, promociones ni aprobaciones.</p>
-        </form>
-        <div id="contentResults" class="content-results">
-          <article class="network-copy">
-            <div><strong>Instagram / Facebook</strong><button type="button" data-copy="instagram">Copiar texto</button></div>
-            <textarea id="instagramCopy" rows="9" readonly placeholder="Aquí aparecerá el texto para Instagram y Facebook."></textarea>
-          </article>
-          <article class="network-copy">
-            <div><strong>TikTok</strong><button type="button" data-copy="tiktok">Copiar texto</button></div>
-            <textarea id="tiktokCopy" rows="7" readonly placeholder="Aquí aparecerá el texto para TikTok."></textarea>
-          </article>
-          <div class="publish-checklist">
-            <strong>Antes de publicar</strong>
-            <label><input type="checkbox"> Leslie revisó el texto y el medio.</label>
-            <label><input type="checkbox"> No se prometen precio, disponibilidad o aprobación.</label>
-            <label><input type="checkbox"> El WhatsApp indicado es 786-451-3280.</label>
-          </div>
-        </div>
       </div>
     </section>
   </main>
