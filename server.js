@@ -166,7 +166,7 @@ async function startServer() {
       if (request.method === "POST" && url.pathname === "/api/test-whatsapp") {
         try {
           const messageId = await bridge.sendManagerNotification([
-            "🧪 PRUEBA — LESLIE CAR AGENT",
+            "🧪 PRUEBA — OSORIO CIGAR'S AGENT",
             "",
             "El envío de fichas por WhatsApp está funcionando.",
             "Esta no es una ficha real de cliente."
@@ -189,7 +189,7 @@ async function startServer() {
     server.listen(PORT, "0.0.0.0", resolve);
   });
   const url = `http://127.0.0.1:${PORT}`;
-  console.log(`Panel Osorio Car: ${url}`);
+  console.log(`Panel OSORIO CIGAR'S: ${url}`);
 
   bridge.start().catch(error => console.error("No se pudo iniciar WhatsApp:", error));
   const stop = async () => {
