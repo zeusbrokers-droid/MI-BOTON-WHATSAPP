@@ -1,9 +1,9 @@
 {
-  "name": "leslie-car-agent",
+  "name": "osorio-cigar-agent",
   "version": "1.3.0",
   "private": true,
   "main": "electron-main.js",
-  "description": "Agente local de WhatsApp para captar y calificar prospectos de Leslie Car Miami",
+  "description": "Agente local de WhatsApp para captar y calificar prospectos de OSORIO CIGAR'S",
   "author": "Zeus Brokers",
   "type": "commonjs",
   "scripts": {
@@ -24,9 +24,9 @@
     "electron-builder": "^26.0.12"
   },
   "build": {
-    "appId": "com.zeusbrokers.lesliecaragent",
-    "productName": "Leslie Car Agent",
-    "artifactName": "Leslie-Car-Agent-Setup.${ext}",
+    "appId": "com.zeusbrokers.osoriocigaragent",
+    "productName": "Osorio Cigar Agent",
+    "artifactName": "Osorio-Cigar-Agent-Setup.${ext}",
     "directories": {
       "output": "release"
     },
@@ -53,7 +53,7 @@
       "perMachine": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Leslie Car Agent",
+      "shortcutName": "Osorio Cigar Agent",
       "runAfterFinish": true
     }
   },
